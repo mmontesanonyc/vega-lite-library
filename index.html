@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <!--CSS-->
+        <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+    <h1>Visualization experimentations</h1>
+    <p>This page and repo is going to focus on working with some additional approaches to visualizing with Vega-Lite. The more I built mini-apps, the more in-browser data manipulation I do, so it will be good to develop some additional approaches to ingesting, manipulating, and displaying the data. </p>
+
+    <p>To start out with, here's Vega-Lite's basic bar chart from their documentation. Instead of storig the data in-line or referecing it as a URL, it uses <code>data.name</code> to reference a dataset called <code>myData</code>. Additional code in the vegaEmbed function binds <code>myData</code> to what could be an in-line array, but is instead an array stored as a variable, <code>dataStorage</code>.</p>
+    
+    <p>Basic bar chart</p>
+    <div id="vis3" class="chartdest"></div>
+
+    <hr>
+
+    <p>I'll work on similar approaches.</p>
+    <ol>
+      <li><a href="1sortedbar.html">Sorted bar chart</a></li>
+      <li><a href="2linearray.html">Line chart from array</a></li>
+      <li><a href="3vconcat.html">Vertical concatenation</a></li>
+      <li><a href="4vconcat2.html">Vertical concatenation - repeat and select</a></li>
+      <li><a href="5brush.html">Using dynamic x-axis range selection on a companion chart</a></li>
+      <li><a href="6arquero.html">Importing data via Arquero</a></li>
+      <li><a href="7arquero2.html">Importing data from Github via Arquero</a></li>
+      <li><a href="8arquero3-timeselect.html">Arquero, interactive date selection, radio buttons</a></li>
+      <li><a href="9arquero3-await.html">Arquero, uses await/async</a></li>
+      <li><a href="10arquero3-timeselect-2.html">Interactive date selection, number input</a></li>
+      <li><a href="11-VL-to-Vega.html">Converting Vega-Lite spec to Vega spec</a></li>
+    </ol>
+
+    <hr>
+    <p>Other things I want to try:</p>
+    <ul>
+      <li>Getting data import to line chart to not have axis rendering issues</li>
+      <li>Fixing VL version errors</li>
+      <li>Slicker time-scale selection (calculate totals?)</li>
+      <li>Create templates of Vega charts I'll use a lot - with hover/highlight functionality, select, interaction, etc</li>
+    </ul>
+
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+
+
+var simple = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "A simple bar chart with embedded data.",
+  "data": {
+    "name": "myData"
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {"field": "b", "type": "quantitative"},
+    "y": {"field": "a", "type": "nominal"}
+  }
+}
+
+var dataStorage = [
+    {"a": "A", "b": 28},
+      {"a": "B", "b": 55},
+      {"a": "C", "b": 43},
+      {"a": "D", "b": 91}
+    ]
+
+
+
+vegaEmbed('#vis3', simple).then(res =>
+  res.view
+    .insert('myData', dataStorage)
+    .run()
+);
+
+
+</script>
+</body>
+</html>

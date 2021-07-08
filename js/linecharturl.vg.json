@@ -1,0 +1,131 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Test rate over time",
+    "width": "container",
+    "height": 250,
+    "config": {
+        "background": "#FFFFFF",
+        "axisX": {
+            "grid": false,
+            "ticks": true,
+            "labels": true
+        },
+        "axisY": {
+            "domain": false,
+            "ticks": false,
+            "gridDash": [
+                2
+            ],
+            "gridWidth": 1
+        },
+        "view": {
+            "stroke": "transparent"
+        }
+    },
+    "data": {
+      "url": "https://gist.githubusercontent.com/mmontesanonyc/2fdc46bcac05e56cac382524717e4d35/raw/2a9415cc64fb5e2ed3b1b8f513c4677c15619912/sevenday_caserates.csv"
+        },
+    "layer": [
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 2.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal",
+                    "title": ""
+                },
+                "y": {
+                    "field": "CITY",
+                    "type": "quantitative",
+                    "title": null
+                },
+                "color": {
+                    "value": "black"
+                },
+                "tooltip": [
+                    {
+                        "field": "CITY",
+                        "title": "New York City"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 1.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "BX",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "darkgrey"
+                },
+                "tooltip": [
+                    {
+                        "field": "BX",
+                        "title": "The Bronx"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 3
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "UHF101",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "hotpink"
+                },
+                "tooltip": [
+                    {
+                        "field": "UHF101",
+                        "title": "UHF 101"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        }
+    ]
+}

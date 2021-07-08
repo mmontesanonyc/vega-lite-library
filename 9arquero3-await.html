@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Importing data with Arquero, and async/await</h1>
+
+      <p>
+        This is how to use Arquero in an async/await function.
+      </p>
+
+
+
+
+      <div id="vis2" class="chartdest" style="width: 100%"></div>
+
+      <div id="print"></div>
+    </div>
+
+    <script type="text/javascript">
+
+
+      var lineChart = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        description: "Test rate over time",
+        width: "container",
+        height: 250,
+        config: {
+          bar: {
+            continuousBandSize: 1,
+          },
+          background: "#FFFFFF",
+          axisX: {
+            grid: false,
+            ticks: true,
+            labels: true,
+          },
+          axisY: {
+            domain: false,
+            ticks: false,
+            gridDash: [2],
+            gridWidth: 1,
+          },
+          view: {
+            stroke: "transparent",
+          },
+        },
+        data: {
+          name: "lineData",
+        },
+        layer: [
+          {
+            mark: {
+              type: "bar",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 0.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "lightblue",
+              },
+              tooltip: [
+                {
+                  field: "CASE_COUNT",
+                  title: "New York City",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+          {
+            mark: {
+              type: "line",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 1.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT_7DAY_AVG",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "darkblue",
+              },
+              opacity: { value: 0.7 },
+              tooltip: [
+                {
+                  field: "CASE_COUNT_7DAY_AVG",
+                  title: "7-day average",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      // arquero code to retrieve a CSV:
+      var dt;
+      var print = document.getElementById("print");
+      var fullTable;
+
+      var num;
+      var tot;
+      var ninetyTable = [];
+
+      async function loadData() {
+        dt = await aq.loadCSV("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv");
+        console.log('data loaded');
+        dt.print(); // PRINT TABLE TO CONSOLE
+        doStuffWithArquero(); // RUN THE FUNCTION
+      }
+
+      // loadData() runs at the end.
+
+
+
+
+  
+      function doStuffWithArquero() {
+
+        // logs columnNames to table
+        console.log(dt.columnNames());
+
+        // // record number of columns and rows:
+        console.log("Number of columns: " + dt.numCols());
+        console.log("Number of rows: " + dt.numRows());
+
+        // dt.objects() creates an array of flat objects, useful for charting. This gets us to our file we would ordinarily use.
+        fullTable = dt.objects();
+
+        tot = fullTable.length;
+
+        num = tot - 90;
+
+        // push a certain amount of records into ninetyTable, which we could chart.
+        for (let i = num; i < fullTable.length; i++) {
+          ninetyTable.push(fullTable[i]);
+        }
+        // we could use this to do user-selected date ranges - last 90 would take the full epi curve and chart it.
+        // or, a slider could have an event listener, update a numOfDays variable, and re-draw the chart.
+
+        vegaEmbed("#vis2", lineChart).then((res) =>
+          res.view.insert("lineData", fullTable).run()
+        );
+      }
+
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+
+      // LOAD THE DATA AND RUN THE THING
+
+    loadData();
+    </script>
+  </body>
+</html>

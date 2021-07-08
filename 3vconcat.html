@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+          <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Using vconcat</h1>
+    
+    <p>This uses VL's vconcat. It works a lot like <code>layer</code> but stacks instead of superimposes. This is handy since it only loads the data file once, unlike one-off chart platforms like DW.</p>
+
+    <p>Note that when using <code>vconcat</code>, you need to put <code>"width": "container"</code> inside of the <code>vconcat</code> array.</p>
+
+    <p>This uses some <code>config.axisY</code> settings for better y-axis/subtitle placement. I'll also note that for both tooltips and x-axis labels, it's important to have <code>"type": "temporal"</code> for VL to interpret the dates.</p>
+
+    <div id="vis" class="chartdest"></div>
+
+    <hr>
+
+    <p>In this instance, we 'manually vconcatenate' to use layer to overlay a 7-day average line on top of the bars.</p>
+    
+    <div id="vis1" class="chartdest"></div>
+
+    <div id="vis2" class="chartdest"></div>
+
+    <div id="vis3" class="chartdest"></div>
+
+    <hr>
+
+    <p>Lastly, here it is as a layered chart. Note that type: temporal hasn't been applied - see the tooltip.</p>
+
+    <div id="vis4" class="chartdest"></div>
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+  var chart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+    "config": {
+      "background": "#FFFFFF",
+      "axisX": {
+        "domain": true,
+        "labels": true,
+        "grid": false,
+        "labelFontSize": 8,
+        "tickColor": "#000000",
+        "tickSize": 2,
+        "titleFontSize": 12
+      },
+
+      "axisY": 
+        {
+            "domain": false, 
+            "labels": true, 
+            "grid": true, 
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -11
+        },
+      "view": {"stroke": "transparent"}    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+    "vconcat": [
+      {
+        "width": "container",
+        "height": 450,
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "lightskyblue"},
+        "encoding": {
+          "y": {"field": "CASE_COUNT_7DAY_AVG", "type": "quantitative", "title": "Cases"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average case count"}
+          ]
+        }
+      },
+            {
+              "width": "container",
+              "height": 150,
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkslateblue"},
+        "encoding": {
+          "y": {"field": "HOSP_COUNT_7DAY_AVG", "type": "quantitative", "title": "Hospitalizations"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average hospitalization count"}
+          ]
+        }
+      },
+            {
+              "width": "container",
+              "height": 50,
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkgray"},
+        "encoding": {
+          "y": {"field": "DEATH_COUNT_7DAY_AVG", "type": "quantitative", "title": "Deaths"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average death count"}
+          ]
+        }
+      }
+    ]
+  }
+
+
+vegaEmbed('#vis', chart);
+
+
+// AND WE'RE MOVING TO ONE-OFF CHART SPECS HERE:
+
+var chartCases = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+    "width": "container",
+    "config": {
+      "background": "#FFFFFF",
+      "axisX": {
+        "domain": true,
+        "labels": true,
+        "grid": false,
+        "labelFontSize": 8,
+        "tickColor": "#000000",
+        "tickSize": 2,
+        "titleFontSize": 12
+      },
+
+      "axisY": 
+        {
+            "domain": false, 
+            "labels": true, 
+            "grid": true, 
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -11
+        },
+      "view": {"stroke": "transparent"}    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+    "layer": [
+      {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "lightskyblue"
+        },
+        "encoding": {
+          "y": {"field": "CASE_COUNT", "type": "quantitative", "title": "Cases"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "CASE_COUNT", "title": "Case count"}
+          ]
+        }
+      },
+
+      {
+        "mark": {
+          "type": "line", 
+          "tooltip": true, 
+          "color": "darkblue"},
+        "encoding": {
+          "y": {"field": "CASE_COUNT_7DAY_AVG", "type": "quantitative", "title": "Cases"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "Case count (7-day av)"}
+          ]
+        }
+      }
+    ]
+  }
+
+var chartHosps = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+    "width": "container",
+    "config": {
+      "background": "#FFFFFF",
+      "axisX": {
+        "domain": true,
+        "labels": true,
+        "grid": false,
+        "labelFontSize": 8,
+        "tickColor": "#000000",
+        "tickSize": 2,
+        "titleFontSize": 12
+      },
+
+      "axisY": 
+        {
+            "domain": false, 
+            "labels": true, 
+            "grid": true, 
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -11
+        },
+      "view": {"stroke": "transparent"}    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+    "layer": [
+            {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkslateblue"},
+        "encoding": {
+          "y": {"field": "HOSP_COUNT_7DAY_AVG", "type": "quantitative", "title": "Hosps"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "HOSP_COUNT_7DAY_AVG", "title": "7-day average hospitalization count"}
+          ]
+        }
+      }
+    ]
+  }
+
+var chartDeaths = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+    "width": "container",
+    "config": {
+      "background": "#FFFFFF",
+      "axisX": {
+        "domain": true,
+        "labels": true,
+        "grid": false,
+        "labelFontSize": 8,
+        "tickColor": "#000000",
+        "tickSize": 2,
+        "titleFontSize": 12
+      },
+
+      "axisY": 
+        {
+            "domain": false, 
+            "labels": true, 
+            "grid": true, 
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -11
+        },
+      "view": {"stroke": "transparent"}    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+    "layer": [
+            {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkgray"},
+        "encoding": {
+          "y": {"field": "DEATH_COUNT_7DAY_AVG", "type": "quantitative", "title": "Deaths"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date", "type": "temporal"},
+            {"field": "DEATH_COUNT_7DAY_AVG", "title": "7-day average death count"}
+          ]
+        }
+      }
+    ]
+  }
+
+var layered = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+    "width": "container",
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+    "layer": [
+      {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "lightskyblue"},
+        "encoding": {
+          "y": {"field": "CASE_COUNT_7DAY_AVG", "type": "quantitative", "title": "cases"},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average case count"}
+          ]
+        }
+      },
+            {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkslateblue"},
+        "encoding": {
+          "y": {"field": "HOSP_COUNT_7DAY_AVG", "type": "quantitative", "title": null},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average case count"}
+          ]
+        }
+      },
+            {
+        "mark": {
+          "type": "bar", 
+          "tooltip": true, 
+          "color": "darkgray"},
+        "encoding": {
+          "y": {"field": "DEATH_COUNT_7DAY_AVG", "type": "quantitative", "title": null},
+          "x": {"field": "date_of_interest", "type": "temporal", "title": "Date"},
+          "tooltip": [
+            {"field": "date_of_interest", "title": "Date"},
+            {"field": "CASE_COUNT_7DAY_AVG", "title": "7-day average case count"}
+          ]
+        }
+      }
+    ]
+  }
+
+vegaEmbed('#vis1', chartCases);
+vegaEmbed('#vis2', chartHosps);
+vegaEmbed('#vis3', chartDeaths)
+vegaEmbed('#vis4',layered);
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+
+</script>
+</body>
+</html>

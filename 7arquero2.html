@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+    
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Bar chart using Arquero</h1>
+    
+    <p>Similar to others, this uses <code>data.name</code> and enhanced vegaEmbed to chart the data. But with this, the data are imported from a CSV on Github, using Arquero. <code>dt.objects()</code> creates a JS variable that we use as our data variable. This import code is modelled on how we use d3.csv, because Arquero's <a href="https://uwdata.github.io/arquero/api/#loadCSV">suggested loadCSV code</a> doesn't function as expected. Something about async functions.</p>
+    <p>It's interesting to note that despite using the same Arquero to array to Vega.View approach to inserting data from an object, this doesn't have the axis labeling problems. </p>
+    <p>Stuck in a little transpose function, because why not?</p>
+
+    <button onclick="transpose()">Transpose</button>
+
+    <div id="vis2" class="chartdest"></div>
+    
+
+    
+    
+    <div id="print">
+
+        
+    </div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+function transpose() {
+
+  if (barChart.encoding.x.field == "subgroup") {
+   console.log('true, change');
+
+    barChart.encoding.y.field = "subgroup"
+    barChart.encoding.y.title = "group"
+    barChart.encoding.y.type = "nominal"
+    barChart.encoding.x.field = "BK_CASE_RATE"
+    barChart.encoding.x.title = "Brooklyn case rate"
+    barChart.encoding.x.type = "quantitative"
+
+  } else if (barChart.encoding.x.field == "BK_CASE_RATE") {
+    console.log('false, revert');
+    barChart.encoding.x.field = "subgroup"
+    barChart.encoding.x.title = "group"
+    barChart.encoding.x.type = "nominal"
+    barChart.encoding.y.field = "BK_CASE_RATE"
+    barChart.encoding.y.title = "Brooklyn case rate"
+    barChart.encoding.y.type = "quantitative"
+  };
+
+  vegaEmbed('#vis2', barChart).then(res =>
+            res.view
+                .insert('thisData', tableForVega)
+                .run()
+            );
+}
+
+
+
+var barChart = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "A simple bar chart with embedded data.",
+  "data": {
+    "name": "thisData"
+  },
+  "mark": "bar",
+  "encoding": {
+    "y": {"field": "BK_CASE_RATE", "title": "Brooklyn case rate", "type": "quantitative"},
+    "x": {"field": "subgroup", "title": "group", "type": "nominal"}
+  }
+}
+
+
+
+
+
+    // arquero code to retrieve a CSV:
+    var dt;
+    var print = document.getElementById('print');
+    var tableForVega;
+
+
+    // Loads the csv as an arquero table
+    aq.loadCSV('https://raw.githubusercontent.com/nychealth/coronavirus-data/master/totals/group-cases-by-boro.csv').then(data => {
+        dt = data;
+
+        doStuffWithArquero()
+    });
+
+    function doStuffWithArquero() {
+        // prints table to Console
+        dt.print();
+
+        // logs columnNames to table
+        console.log(dt.columnNames())
+
+        // record number of columns and rows:
+        console.log("Number of columns: " + dt.numCols())
+        console.log("Number of rows: " + dt.numRows());
+
+        // dt.objects() creates an array of flat objects, useful for charting. This gets us to our file we would ordinarily use.
+        tableForVega = dt.objects();
+
+        vegaEmbed('#vis2', barChart).then(res =>
+            res.view
+                .insert('thisData', tableForVega)
+                .run()
+            );
+
+    }
+
+
+
+
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+</script>
+</body>
+</html>

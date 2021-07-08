@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Interactive Line Chart</h1>
+
+      <p>
+        This uses a number input. For some reason, it only works with the numbers going up; when you go back down the chart doesn't change. I'm not sure why yet.
+      </p>
+
+      <p>
+        <!-- Choose range:
+        <input type="radio" id="full" name="buttons" value="100" checked />
+        <label for="full">Full pandemic</label>
+        <input
+          type="radio"
+          id="recent"
+          name="buttons"
+          value="90"
+          style="margin-left: 15px"
+        />
+        <label for="recent">Last 90 days</label><br />
+      </p>
+      <hr> -->
+      <form id="numberinput">
+      <label for="inputNum" style="display:inline-block;">Show data for the last</label>
+      <input type="number" style="display:inline-block" id="inputNum" name="inputNum" min="1" max="30">
+     months.    <button style="display:inline-block" onclick="updateChart(0)">Reset</button>
+    </form>
+
+      <div id="vis2" class="chartdest" style="width: 100%"></div>
+
+      <div id="print"></div>
+    </div>
+
+    <script type="text/javascript">
+
+      // arquero code to retrieve a CSV:
+      var dt;
+      var print = document.getElementById("print");
+      var fullTable;
+
+      var num;
+      var tot;
+      var shortTable = [];
+
+      // Loads the csv as an arquero table
+      aq.loadCSV(
+        "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+      ).then(data => {
+        dt = data;
+
+        fullTable = dt.objects();
+
+        vegaEmbed("#vis2", lineChart).then((res) =>
+          res.view.insert("lineData", fullTable).run()
+        );
+
+      });
+
+      var floorNum;
+      var numDays
+      var inputNum;
+
+      document.getElementById('inputNum').addEventListener('change',function() {
+        console.log('fired')
+        event.preventDefault();
+        inputNum = document.getElementById('inputNum').value;
+        numDays = inputNum * 30
+        floorNum = dt.numRows() - numDays;
+
+        // this only works to REDUCE because we are adding to shortTable via push in the forloop, but we're not removing from it
+
+
+
+        if (floorNum > 1) {
+          updateChart(floorNum);
+        } else {
+          updateChart(1); // prevent negative
+        } 
+      },
+          false);
+
+
+
+  function updateChart(x) {
+        shortTable = fullTable.slice(x, fullTable.length);
+
+        vegaEmbed("#vis2", lineChart).then((res) =>
+          res.view.insert("lineData", shortTable).run()
+        );
+      }
+
+
+      // THIS IS FOR RADIO BUTTON INPUT
+      // window.onload = listenRadios;
+      // function listenRadios() {
+      //   radios = document.querySelectorAll('input[type=radio][name="buttons"]');
+      //   radios.forEach(function (radio) {
+      //     return radio.addEventListener("change", function () {
+      //       console.log("button changed!");
+
+      //       if (radio.value == 100) {
+      //         lineChart.config.bar.continuousBandSize = 1;
+
+      //         vegaEmbed("#vis2", lineChart).then((res) =>
+      //           res.view.insert("lineData", fullTable).runAsync()
+      //         );
+      //       } else if (radio.value == 90) {
+      //         lineChart.config.bar.continuousBandSize = 5;
+
+      //         vegaEmbed("#vis2", lineChart).then((res) =>
+      //           res.view.insert("lineData", ninetyTable).runAsync()
+      //         );
+      //       } else {
+      //       }
+      //     });
+      //   });
+      // }
+
+      var lineChart = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        description: "Test rate over time",
+        width: "container",
+        height: 250,
+        config: {
+          bar: {
+            continuousBandSize: 1,
+          },
+          background: "#FFFFFF",
+          axisX: {
+            grid: false,
+            ticks: true,
+            labels: true,
+          },
+          axisY: {
+            domain: false,
+            ticks: false,
+            gridDash: [2],
+            gridWidth: 1,
+          },
+          view: {
+            stroke: "transparent",
+          },
+        },
+        data: {
+          name: "lineData",
+        },
+        layer: [
+          {
+            mark: {
+              type: "bar",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 0.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "lightblue",
+              },
+              tooltip: [
+                {
+                  field: "CASE_COUNT",
+                  title: "New York City",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+          {
+            mark: {
+              type: "line",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 1.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT_7DAY_AVG",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "darkblue",
+              },
+              opacity: { value: 0.7 },
+              tooltip: [
+                {
+                  field: "CASE_COUNT_7DAY_AVG",
+                  title: "7-day average",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+
+
+
+
+      // does not work:
+      //   var ppTable;
+      //   ppTable = await aq.loadCSV(
+      //     "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/percentpositive-by-modzcta.csv"
+      //   );
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+    </script>
+  </body>
+</html>

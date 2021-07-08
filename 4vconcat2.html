@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+          <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Using vconcat - enhanced</h1>
+    
+<p>This rendition uses <code>repeat</code> to simplify the concatenation, and adds a selection between them. But the selection doesn't <em>do</em> anything yet.</p>
+    <div id="vis" class="chartdest"></div>
+
+
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+  var chart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Tick chart",
+
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+
+    "repeat": {
+      "row": [ "CASE_COUNT_7DAY_AVG", "HOSP_COUNT_7DAY_AVG" ]
+      },
+    
+  "spec": {
+    "selection": {
+      "my_selection": {"type": "interval", "empty": "none"}
+    },
+    "mark": "bar",
+    "width": "container",
+    "encoding": {
+      "x": {"field": "date_of_interest", "type": "temporal"},
+      "y": {"field": {"repeat": "row"}, "type": "quantitative"},
+      "color": {
+        "condition": {
+          "selection": "my_selection",
+          "value": "darkblue"
+        },
+        "value": "darkgray"
+      }
+    }
+  }
+}
+
+vegaEmbed('#vis', chart);
+
+
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+</script>
+</body>
+</html>

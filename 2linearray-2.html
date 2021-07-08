@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+
+    <!-- added trying to get View to work -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Functional line chart</h1>
+    
+    <p>This stores the spec in a separate file - I assuming doing this spec storage means you can't directly manipulate it.</p>
+
+    <div id="vis2" class="chartdest"></div>
+    
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+var spec = "js/linecharturl.vg.json";
+var trendData;
+
+
+
+// d3 code pulls in data. 
+d3.csv("https://gist.githubusercontent.com/mmontesanonyc/2fdc46bcac05e56cac382524717e4d35/raw/2a9415cc64fb5e2ed3b1b8f513c4677c15619912/sevenday_caserates.csv").then(data => {
+    trendData = data;
+
+    vegaEmbed('#vis2',spec)
+    
+});
+
+
+function embed(dest, spec, name, array) {
+  vegaEmbed(dest, spec).then(res =>
+        res.view
+            .insert(name, array)
+            .runAsync()
+        );
+}
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+
+
+</script>
+</body>
+</html>

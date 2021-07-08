@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Sorted bar chart</h1>
+
+    <p>This visualization uses the same approach with <code>data.name</code> and the additional code in <code>vegaEmbed</code> to read an array of data that has been ingested into the browser.</p>
+
+    <p>Additionally, in <code>layer[0].encoding.x</code>, we have a sort on the bar chart.</p>
+
+    <div id="vis1" class="chartdest"></div>
+    
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+  /*
+  This method works a little bit differnetly. Within the d3.csv function, it loads the CSV as an array in JS variable. 
+
+  The Spec (spec) references the name of a dataset, barData.
+
+  Calling vegaEmbed references the name of that dataset, and its contents, via .insert, and then runs it with .run().
+
+  Calling vegaEmbed within the d3.csv function ensures that the csv loads before additional functions run.
+  */
+
+    d3.csv("https://raw.githubusercontent.com/nychealth/covid-vaccine-data/main/people/coverage-by-modzcta-allages.csv").then(function(data) {
+        var vaxData = data;
+
+        // Manipulate vaxData here
+
+        //Then, run the vegaEmbed
+
+        vegaEmbed('#vis1', spec).then(res =>
+          res.view
+          .insert('barData', vaxData)
+          .run()
+          );
+      });
+
+
+
+
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "Tick chart",
+  "width": "container",
+  "height": 150,
+  "config": {
+    "background": "#FFFFFF",
+    "axisX": {
+      "domain": true,
+      "labels": true,
+      "grid": false,
+      "labelFontSize": 8,
+      "tickColor": "#000000",
+      "tickSize": 2,
+      "titleFontSize": 12
+    },
+    "axisY": {"domain": false, "labels": false, "grid": false, "ticks": false},
+    "view": {"stroke": "transparent"},
+    "tick": {"thickness": 0.65, "bandSize": 40}
+  },
+  "data": {
+    "name": "barData"
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "tooltip": true, "color": "darkgrey"},
+      "encoding": {
+        "y": {"field": "PERC_FULLY", "type": "quantitative", "title": null},
+        "tooltip": [
+          {"field": "Label", "title": "ZIP"},
+          {"field": "NEIGHBORHOOD_NAME", "title": "Neighborhood"},
+          {
+            "field": "PERC_FULLY",
+            "type": "quantitative",
+            "title": "Percent fully vaccinated"
+          }
+        ],
+        "x": {"field": "MODZCTA", "sort": {"field": "PERC_FULLY"}, "axis": null}
+      }
+    },
+    {
+      "mark": {"type": "bar", "tooltip": true, "color": "#DB00A8"},
+      "encoding": {
+        "y": {"field": "PERC_FULLY", "type": "quantitative", "title": null},
+        "tooltip": [
+          {"field": "Label", "title": "ZIP"},
+          {"field": "NEIGHBORHOOD_NAME", "title": "Neighborhood"},
+          {
+            "field": "PERC_FULLY",
+            "type": "quantitative",
+            "title": "Percent fully vaccinated"
+          }
+        ],
+        "x": {"field": "MODZCTA", "sort": {"field": "PERC_FULLY"}, "axis": null}
+      },
+      "transform": [{"filter": "datum.MODZCTA == 11226"}]
+    }
+  ]
+};
+
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+</script>
+</body>
+</html>

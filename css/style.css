@@ -1,0 +1,21 @@
+body {
+    max-width: 700px;
+    margin: auto;
+  }
+
+  #container {
+    max-width: 700px;
+  }
+
+  .chartdest {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 50px;
+  }
+
+  code {
+    color: white;
+    background-color: rgb(73, 73, 73);
+    padding-left: 3px;
+    padding-right: 3px;
+  }

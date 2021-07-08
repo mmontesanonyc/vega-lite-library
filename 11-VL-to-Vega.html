@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+      .codeblock {
+        background-color:#f2f2f2;
+        font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+        padding: 10px;
+        font-size: 12px;
+
+      }
+
+    </style>
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Converting to Vega</h1>
+
+    <p>Vega can let us do things that Vega-Lite can't - additional signal, hover, highlighting, tooltip actions, and so on. We can take basic VL charts and convert them to functional Vega spec as a platform for adding additional items to them, using <code>(vegaLite.compile(SPEC, {}).spec)</code>.</p>
+
+    <p>Here's chartSpec from Data by ZIP:</p>
+    <div id="vis1" class="chartdest"></div>
+
+    <p>Look at the console to see the same chart spec formatted as Vega. Using the same embed code, <code>vegaEmbed('#vis2', spec2)</code>, we embed the chart, now a Vega chart, into the page. </p>
+
+    <div id="vis2" class="chartdest">
+
+    </div>
+
+
+    
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+
+
+
+
+
+
+  var spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "LINE CHART",
+    "width": "container",
+    "height": 350,
+    "config": {
+        "background": "#FFFFFF",
+        "axisX": {
+            "grid": false
+        },
+        "axisY": {
+            "domain": false,
+            "ticks": false,
+            "gridDash": [
+                2
+            ],
+            "gridWidth": 1
+        },
+        "view": {
+            "stroke": "transparent"
+        }
+    },
+    "data": {
+        "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/caserate-by-modzcta.csv"
+    },
+    "layer": [
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 1.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_ending",
+                    "type": "temporal",
+                    "title": ""
+                },
+                "y": {
+                    "field": "CASERATE_CITY",
+                    "type": "quantitative",
+                    "title": null
+                },
+                "color": {
+                    "value": "black"
+                },
+                "tooltip": [
+                    {
+                        "field": "CASERATE_CITY",
+                        "title": "New York City"
+                    },
+                    {
+                        "field": "week_ending",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 1.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_ending",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "CASERATE_BK",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "darkgrey"
+                },
+                "tooltip": [
+                    {
+                        "field": "CASERATE_BK",
+                        "title": "Brooklyn"
+                    },
+                    {
+                        "field": "week_ending",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": {
+                    "filled": false,
+                    "fill": "white"
+                },
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 3
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_ending",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "CASERATE_11203",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "hotpink"
+                },
+                "tooltip": [
+                    {
+                        "field": "CASERATE_11203",
+                        "title": "11203"
+                    },
+                    {
+                        "field": "week_ending",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+vegaEmbed('#vis1', spec);
+
+console.log(vegaLite.compile(spec, {}).spec);
+
+
+
+var spec2 = {
+    "$schema": "https://vega.github.io/schema/vega/v5.json",
+    "description": "LINE CHART",
+    "autosize": {
+        "type": "fit-x",
+        "contains": "padding"
+    },
+    "background": "#FFFFFF",
+    "padding": 5,
+    "height": 350,
+    "style": "cell",
+    "data": [
+        {
+            "name": "source_0",
+            "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/caserate-by-modzcta.csv",
+            "format": {
+                "type": "csv",
+                "parse": {
+                    "week_ending": "date"
+                }
+            }
+        },
+        {
+            "name": "data_1",
+            "source": "source_0",
+            "transform": [
+                {
+                    "type": "filter",
+                    "expr": "(isDate(datum[\"week_ending\"]) || (isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]))) && isValid(datum[\"CASERATE_CITY\"]) && isFinite(+datum[\"CASERATE_CITY\"])"
+                }
+            ]
+        },
+        {
+            "name": "data_2",
+            "source": "source_0",
+            "transform": [
+                {
+                    "type": "filter",
+                    "expr": "(isDate(datum[\"week_ending\"]) || (isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]))) && isValid(datum[\"CASERATE_BK\"]) && isFinite(+datum[\"CASERATE_BK\"])"
+                }
+            ]
+        },
+        {
+            "name": "data_3",
+            "source": "source_0",
+            "transform": [
+                {
+                    "type": "filter",
+                    "expr": "(isDate(datum[\"week_ending\"]) || (isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]))) && isValid(datum[\"CASERATE_11203\"]) && isFinite(+datum[\"CASERATE_11203\"])"
+                }
+            ]
+        }
+    ],
+    "signals": [
+        {
+            "name": "width",
+            "init": "isFinite(containerSize()[0]) ? containerSize()[0] : 200",
+            "on": [
+                {
+                    "update": "isFinite(containerSize()[0]) ? containerSize()[0] : 200",
+                    "events": "window:resize"
+                }
+            ]
+        }
+    ],
+    "marks": [
+        {
+            "name": "layer_0_layer_0_marks",
+            "type": "line",
+            "style": [
+                "line"
+            ],
+            "sort": {
+                "field": "datum[\"week_ending\"]"
+            },
+            "from": {
+                "data": "source_0"
+            },
+            "encode": {
+                "update": {
+                    "strokeWidth": {
+                        "value": 1.5
+                    },
+                    "interpolate": {
+                        "value": "natural"
+                    },
+                    "tooltip": {
+                        "signal": "{\"New York City\": isValid(datum[\"CASERATE_CITY\"]) ? datum[\"CASERATE_CITY\"] : \"\"+datum[\"CASERATE_CITY\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "stroke": {
+                        "value": "black"
+                    },
+                    "description": {
+                        "signal": "\"week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_CITY: \" + (format(datum[\"CASERATE_CITY\"], \"\")) + \"; New York City: \" + (isValid(datum[\"CASERATE_CITY\"]) ? datum[\"CASERATE_CITY\"] : \"\"+datum[\"CASERATE_CITY\"]) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_CITY"
+                    },
+                    "defined": {
+                        "signal": "isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]) && isValid(datum[\"CASERATE_CITY\"]) && isFinite(+datum[\"CASERATE_CITY\"])"
+                    }
+                }
+            }
+        },
+        {
+            "name": "layer_0_layer_1_marks",
+            "type": "symbol",
+            "style": [
+                "point"
+            ],
+            "from": {
+                "data": "data_1"
+            },
+            "encode": {
+                "update": {
+                    "opacity": {
+                        "value": 1
+                    },
+                    "tooltip": {
+                        "signal": "{\"New York City\": isValid(datum[\"CASERATE_CITY\"]) ? datum[\"CASERATE_CITY\"] : \"\"+datum[\"CASERATE_CITY\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "fill": {
+                        "value": "black"
+                    },
+                    "ariaRoleDescription": {
+                        "value": "point"
+                    },
+                    "description": {
+                        "signal": "\"week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_CITY: \" + (format(datum[\"CASERATE_CITY\"], \"\")) + \"; New York City: \" + (isValid(datum[\"CASERATE_CITY\"]) ? datum[\"CASERATE_CITY\"] : \"\"+datum[\"CASERATE_CITY\"]) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_CITY"
+                    }
+                }
+            }
+        },
+        {
+            "name": "layer_1_layer_0_marks",
+            "type": "line",
+            "style": [
+                "line"
+            ],
+            "sort": {
+                "field": "datum[\"week_ending\"]"
+            },
+            "from": {
+                "data": "source_0"
+            },
+            "encode": {
+                "update": {
+                    "strokeWidth": {
+                        "value": 1.5
+                    },
+                    "interpolate": {
+                        "value": "natural"
+                    },
+                    "tooltip": {
+                        "signal": "{\"Brooklyn\": isValid(datum[\"CASERATE_BK\"]) ? datum[\"CASERATE_BK\"] : \"\"+datum[\"CASERATE_BK\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "stroke": {
+                        "value": "darkgrey"
+                    },
+                    "description": {
+                        "signal": "\"week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_BK: \" + (format(datum[\"CASERATE_BK\"], \"\")) + \"; Brooklyn: \" + (isValid(datum[\"CASERATE_BK\"]) ? datum[\"CASERATE_BK\"] : \"\"+datum[\"CASERATE_BK\"]) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_BK"
+                    },
+                    "defined": {
+                        "signal": "isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]) && isValid(datum[\"CASERATE_BK\"]) && isFinite(+datum[\"CASERATE_BK\"])"
+                    }
+                }
+            }
+        },
+        {
+            "name": "layer_1_layer_1_marks",
+            "type": "symbol",
+            "style": [
+                "point"
+            ],
+            "from": {
+                "data": "data_2"
+            },
+            "encode": {
+                "update": {
+                    "opacity": {
+                        "value": 1
+                    },
+                    "tooltip": {
+                        "signal": "{\"Brooklyn\": isValid(datum[\"CASERATE_BK\"]) ? datum[\"CASERATE_BK\"] : \"\"+datum[\"CASERATE_BK\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "fill": {
+                        "value": "darkgrey"
+                    },
+                    "ariaRoleDescription": {
+                        "value": "point"
+                    },
+                    "description": {
+                        "signal": "\"week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_BK: \" + (format(datum[\"CASERATE_BK\"], \"\")) + \"; Brooklyn: \" + (isValid(datum[\"CASERATE_BK\"]) ? datum[\"CASERATE_BK\"] : \"\"+datum[\"CASERATE_BK\"]) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_BK"
+                    }
+                }
+            }
+        },
+        {
+            "name": "layer_2_layer_0_marks",
+            "type": "line",
+            "style": [
+                "line"
+            ],
+            "sort": {
+                "field": "datum[\"week_ending\"]"
+            },
+            "from": {
+                "data": "source_0"
+            },
+            "encode": {
+                "update": {
+                    "strokeWidth": {
+                        "value": 3
+                    },
+                    "interpolate": {
+                        "value": "natural"
+                    },
+                    "tooltip": {
+                        "signal": "{\"11203\": isValid(datum[\"CASERATE_11203\"]) ? datum[\"CASERATE_11203\"] : \"\"+datum[\"CASERATE_11203\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "stroke": {
+                        "value": "hotpink"
+                    },
+                    "description": {
+                        "signal": "\"11203: \" + (isValid(datum[\"CASERATE_11203\"]) ? datum[\"CASERATE_11203\"] : \"\"+datum[\"CASERATE_11203\"]) + \"; week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_11203: \" + (format(datum[\"CASERATE_11203\"], \"\")) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_11203"
+                    },
+                    "defined": {
+                        "signal": "isValid(datum[\"week_ending\"]) && isFinite(+datum[\"week_ending\"]) && isValid(datum[\"CASERATE_11203\"]) && isFinite(+datum[\"CASERATE_11203\"])"
+                    }
+                }
+            }
+        },
+        {
+            "name": "layer_2_layer_1_marks",
+            "type": "symbol",
+            "style": [
+                "point"
+            ],
+            "from": {
+                "data": "data_3"
+            },
+            "encode": {
+                "update": {
+                    "opacity": {
+                        "value": 1
+                    },
+                    "fill": {
+                        "value": "white"
+                    },
+                    "tooltip": {
+                        "signal": "{\"11203\": isValid(datum[\"CASERATE_11203\"]) ? datum[\"CASERATE_11203\"] : \"\"+datum[\"CASERATE_11203\"], \"Week ending\": timeFormat(datum[\"week_ending\"], '%b %d, %Y')}"
+                    },
+                    "stroke": {
+                        "value": "hotpink"
+                    },
+                    "ariaRoleDescription": {
+                        "value": "point"
+                    },
+                    "description": {
+                        "signal": "\"11203: \" + (isValid(datum[\"CASERATE_11203\"]) ? datum[\"CASERATE_11203\"] : \"\"+datum[\"CASERATE_11203\"]) + \"; week_ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y')) + \"; CASERATE_11203: \" + (format(datum[\"CASERATE_11203\"], \"\")) + \"; Week ending: \" + (timeFormat(datum[\"week_ending\"], '%b %d, %Y'))"
+                    },
+                    "x": {
+                        "scale": "x",
+                        "field": "week_ending"
+                    },
+                    "y": {
+                        "scale": "y",
+                        "field": "CASERATE_11203"
+                    }
+                }
+            }
+        }
+    ],
+    "scales": [
+        {
+            "name": "x",
+            "type": "time",
+            "domain": {
+                "fields": [
+                    {
+                        "data": "source_0",
+                        "field": "week_ending"
+                    },
+                    {
+                        "data": "data_1",
+                        "field": "week_ending"
+                    },
+                    {
+                        "data": "data_2",
+                        "field": "week_ending"
+                    },
+                    {
+                        "data": "data_3",
+                        "field": "week_ending"
+                    }
+                ]
+            },
+            "range": [
+                0,
+                {
+                    "signal": "width"
+                }
+            ]
+        },
+        {
+            "name": "y",
+            "type": "linear",
+            "domain": {
+                "fields": [
+                    {
+                        "data": "source_0",
+                        "field": "CASERATE_CITY"
+                    },
+                    {
+                        "data": "data_1",
+                        "field": "CASERATE_CITY"
+                    },
+                    {
+                        "data": "source_0",
+                        "field": "CASERATE_BK"
+                    },
+                    {
+                        "data": "data_2",
+                        "field": "CASERATE_BK"
+                    },
+                    {
+                        "data": "source_0",
+                        "field": "CASERATE_11203"
+                    },
+                    {
+                        "data": "data_3",
+                        "field": "CASERATE_11203"
+                    }
+                ]
+            },
+            "range": [
+                {
+                    "signal": "height"
+                },
+                0
+            ],
+            "nice": true,
+            "zero": true
+        }
+    ],
+    "axes": [
+        {
+            "scale": "y",
+            "orient": "left",
+            "gridScale": "x",
+            "grid": true,
+            "tickCount": {
+                "signal": "ceil(height/40)"
+            },
+            "domain": false,
+            "labels": false,
+            "aria": false,
+            "maxExtent": 0,
+            "minExtent": 0,
+            "ticks": false,
+            "zindex": 0
+        },
+        {
+            "scale": "x",
+            "orient": "bottom",
+            "grid": false,
+            "labelFlush": true,
+            "labelOverlap": true,
+            "tickCount": {
+                "signal": "ceil(width/40)"
+            },
+            "zindex": 0
+        },
+        {
+            "scale": "y",
+            "orient": "left",
+            "grid": false,
+            "labelOverlap": true,
+            "tickCount": {
+                "signal": "ceil(height/40)"
+            },
+            "zindex": 0
+        }
+    ],
+    "config": {
+        "axisX": {
+            "grid": false
+        },
+        "axisY": {
+            "domain": false,
+            "ticks": false,
+            "gridDash": [
+                2
+            ],
+            "gridWidth": 1
+        },
+        "style": {
+            "cell": {
+                "stroke": "transparent"
+            }
+        }
+    }
+};
+
+
+vegaEmbed('#vis2', spec2);
+
+
+
+
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Interactive Line Chart using Arquero import</h1>
+
+      <p>
+        With this, I'll import data from a remote CSV using Arquero. And, I'll
+        create interactive elements on the page that control the level of data
+        filtering.
+      </p>
+      <p>
+        This could use a slider or a number-input to dynamically change the
+        range. But, we're still getting axis display bugs. I can try to rewrite
+        the code. Might have something to do with VL trying to draw the chart
+        before the data are loaded?
+      </p>
+
+      <p>
+        Choose range:
+        <input type="radio" id="full" name="buttons" value="100" checked />
+        <label for="full">Full pandemic</label>
+        <input
+          type="radio"
+          id="recent"
+          name="buttons"
+          value="90"
+          style="margin-left: 15px"
+        />
+        <label for="recent">Last 90 days</label><br />
+      </p>
+
+      <div id="vis2" class="chartdest" style="width: 100%"></div>
+
+      <div id="print"></div>
+    </div>
+
+    <script type="text/javascript">
+      window.onload = listenRadios;
+      function listenRadios() {
+        radios = document.querySelectorAll('input[type=radio][name="buttons"]');
+        radios.forEach(function (radio) {
+          return radio.addEventListener("change", function () {
+            console.log("button changed!");
+
+            if (radio.value == 100) {
+              lineChart.config.bar.continuousBandSize = 1;
+
+              vegaEmbed("#vis2", lineChart).then((res) =>
+                res.view.insert("lineData", fullTable).run()
+              );
+            } else if (radio.value == 90) {
+              lineChart.config.bar.continuousBandSize = 5;
+
+              vegaEmbed("#vis2", lineChart).then((res) =>
+                res.view.insert("lineData", ninetyTable).run()
+              );
+            } else {
+            }
+          });
+        });
+      }
+
+      var lineChart = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        description: "Test rate over time",
+        width: "container",
+        height: 250,
+        config: {
+          bar: {
+            continuousBandSize: 1,
+          },
+          background: "#FFFFFF",
+          axisX: {
+            grid: false,
+            ticks: true,
+            labels: true,
+          },
+          axisY: {
+            domain: false,
+            ticks: false,
+            gridDash: [2],
+            gridWidth: 1,
+          },
+          view: {
+            stroke: "transparent",
+          },
+        },
+        data: {
+          name: "lineData",
+        },
+        layer: [
+          {
+            mark: {
+              type: "bar",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 0.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "lightblue",
+              },
+              tooltip: [
+                {
+                  field: "CASE_COUNT",
+                  title: "New York City",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+          {
+            mark: {
+              type: "line",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 1.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT_7DAY_AVG",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "darkblue",
+              },
+              opacity: { value: 0.7 },
+              tooltip: [
+                {
+                  field: "CASE_COUNT_7DAY_AVG",
+                  title: "7-day average",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      // arquero code to retrieve a CSV:
+      var dt;
+      var print = document.getElementById("print");
+      var fullTable;
+
+      var num;
+      var tot;
+      var ninetyTable = [];
+
+      // Loads the csv as an arquero table
+      aq.loadCSV(
+        "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+      ).then(data => {
+        dt = data;
+
+        doStuffWithArquero();
+      });
+
+      function doStuffWithArquero() {
+        // prints table to Console
+        dt.print();
+
+        // logs columnNames to table
+        console.log(dt.columnNames());
+
+        // record number of columns and rows:
+        console.log("Number of columns: " + dt.numCols());
+        console.log("Number of rows: " + dt.numRows());
+
+        // dt.objects() creates an array of flat objects, useful for charting. This gets us to our file we would ordinarily use.
+        fullTable = dt.objects();
+
+        tot = fullTable.length;
+
+        num = tot - 90;
+
+        // push a certain amount of records into ninetyTable, which we could chart.
+        for (let i = num; i < fullTable.length; i++) {
+          ninetyTable.push(fullTable[i]);
+        }
+        // we could use this to do user-selected date ranges - last 90 would take the full epi curve and chart it.
+        // or, a slider could have an event listener, update a numOfDays variable, and re-draw the chart.
+
+        vegaEmbed("#vis2", lineChart).then((res) =>
+          res.view.insert("lineData", fullTable).run()
+        );
+      }
+
+      // does not work:
+      //   var ppTable;
+      //   ppTable = await aq.loadCSV(
+      //     "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/percentpositive-by-modzcta.csv"
+      //   );
+
+// unnecessary nav
+function printnav() {
+    var print = document.getElementById('print')
+    print.innerHTML = `<hr><a href="index.html">Back to main</a>`
+}
+
+printnav()
+    </script>
+  </body>
+</html>
