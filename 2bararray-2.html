@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Using a named data source in Vega-Lite</h1>
+    
+    <p>This uses <code>data.name</code> in the chart spec, and <a href="https://vega.github.io/vega-lite/docs/data.html#named">vegaEmbed with Vega-View</a> to load data at runtime and update the chart.</p>
+    <p>This results in infinite extent errors, and axes don't render initially - though they render on re-size. I wonder if I need to initially load some data into the chart, but then have the Vega View <em>update</em> it.</p>
+
+    <p>Answer: nope.</p>
+
+    <button onclick="stepOne()">Draw the chart</button>
+    <br>
+    <br>
+    <button onclick="stepThree()">Update chart with new data</button>
+
+    <div id="vis2" class="chartdest"></div>
+    
+
+    
+    
+    <div id="print"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+var spec1 = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        description: "Test rate over time",
+        width: "container",
+        height: 250,
+        config: {
+          bar: {
+            continuousBandSize: 1,
+          },
+          background: "#FFFFFF",
+          axisX: {
+            grid: false,
+            ticks: true,
+            labels: true,
+          },
+          axisY: {
+            domain: false,
+            ticks: false,
+            gridDash: [2],
+            gridWidth: 1,
+          },
+          view: {
+            stroke: "transparent",
+          },
+        },
+        data: {
+          url: "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv",
+        },
+        layer: [
+          {
+            mark: {
+              type: "bar",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 0.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "lightblue",
+              },
+              tooltip: [
+                {
+                  field: "CASE_COUNT",
+                  title: "New York City",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+          {
+            mark: {
+              type: "line",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 1.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT_7DAY_AVG",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "darkblue",
+              },
+              opacity: { value: 0.7 },
+              tooltip: [
+                {
+                  field: "CASE_COUNT_7DAY_AVG",
+                  title: "7-day average",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+var spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        description: "Test rate over time",
+        width: "container",
+        height: 250,
+        config: {
+          bar: {
+            continuousBandSize: 1,
+          },
+          background: "#FFFFFF",
+          axisX: {
+            grid: false,
+            ticks: true,
+            labels: true,
+          },
+          axisY: {
+            domain: false,
+            ticks: false,
+            gridDash: [2],
+            gridWidth: 1,
+          },
+          view: {
+            stroke: "transparent",
+          },
+        },
+        data: {
+          name: "lineData",
+        },
+        layer: [
+          {
+            mark: {
+              type: "bar",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 0.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "lightblue",
+              },
+              tooltip: [
+                {
+                  field: "CASE_COUNT",
+                  title: "New York City",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+          {
+            mark: {
+              type: "line",
+              point: null,
+              tooltip: true,
+              interpolate: "natural",
+              strokeWidth: 1.5,
+            },
+            encoding: {
+              x: {
+                field: "date_of_interest",
+                type: "temporal",
+                title: "",
+              },
+              y: {
+                field: "CASE_COUNT_7DAY_AVG",
+                type: "quantitative",
+                title: null,
+              },
+              color: {
+                value: "darkblue",
+              },
+              opacity: { value: 0.7 },
+              tooltip: [
+                {
+                  field: "CASE_COUNT_7DAY_AVG",
+                  title: "7-day average",
+                },
+                {
+                  field: "date_of_interest",
+                  type: "temporal",
+                  title: "Week ending",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+
+function stepOne() {
+  vegaEmbed('#vis2', spec1)
+  console.log('Chart drawn with data url.')
+}
+
+var trendData;
+
+
+  // d3 code pulls in data. 
+  d3.csv("https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv").then(data => {
+      trendData = data;
+  });
+
+
+function stepThree() {
+  embed('#vis2', spec,'lineData', trendData) ;
+}
+
+
+
+
+// embed function passes in destination, spec, name (from chart spec), and variable with data
+function embed(dest, spec, name, array) {
+  vegaEmbed(dest, spec).then(res =>
+        res.view
+            .insert(name, array)
+            .runAsync()
+        );
+}
+
+
+
+
+
+</script>
+</body>
+</html>
