@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Data filtering off of a single file</h1>
+
+      <p>
+        This works on getting rid of now-file.csv approaches. It would let us load the full-trend files but use VL's filtering to do date selection.
+      </p>
+
+
+      <p>
+        Choose range:
+        <input type="radio" id="full" name="buttons" value="100" checked />
+        <label for="full">Full pandemic</label>
+        <input
+          type="radio"
+          id="recent"
+          name="buttons"
+          value="90"
+          style="margin-left: 15px"
+        />
+        <label for="recent">Last 90 days</label><br />
+      </p>
+
+      <div id="vis2" class="chartdest" style="width: 100%"></div>
+
+      <h2>Data calculations from a single file</h2>
+      <p>Next, we want to use CASE_COUNT and PROBABLE_CASE_COUNT to display Total New Cases. We'll also calculate the total number of cases in the last 90 days in the above display.</p>
+      <div id="vis3" class="chartdest" style="width: 100%"></div>
+
+
+      <hr><a href="index.html">Back to main</a>    </div>
+
+    <script type="text/javascript">
+
+      window.onload = listenRadios;
+
+      function listenRadios() {
+        radios = document.querySelectorAll('input[type=radio][name="buttons"]');
+        radios.forEach(function (radio) {
+          return radio.addEventListener("change", function () {
+
+
+            if (radio.value == 100) {
+              lineChart.config.bar.continuousBandSize = 1;
+              
+              lineChart.layer[0].transform[0].filter = `datum.date_of_interest > 0`;
+              lineChart.layer[1].transform[0].filter = `datum.date_of_interest > 0`;
+
+            } else if (radio.value == 90) {
+              lineChart.config.bar.continuousBandSize = 5;
+              
+              lineChart.layer[0].transform[0].filter = `datum.date_of_interest > ${ninetyDays}`;
+              lineChart.layer[1].transform[0].filter = `datum.date_of_interest > ${ninetyDays}`;
+
+             
+            } else {
+            };
+            drawChart();
+          });
+        });
+      }
+
+      // chart Specification
+      var lineChart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Test rate over time",
+    "width": "700",
+    "height": 250,
+    "config": {
+        "bar": {
+            "continuousBandSize": 2
+        },
+        "background": "#FFFFFF",
+        "axisX": {
+            "grid": false,
+            "ticks": true,
+            "labels": true
+        },
+        "axisY": {
+            "domain": false,
+            "ticks": false,
+            "gridDash": [
+                2
+            ],
+            "gridWidth": 1
+        },
+        "view": {
+            "stroke": "transparent"
+        }
+    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+        },
+    "layer": [
+        {
+            "mark": {
+                "type": "bar",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 0.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "date_of_interest",
+                    "type": "temporal",
+                    "title": ""
+                },
+                "y": {
+                    "field": "CASE_COUNT",
+                    "type": "quantitative",
+                    "title": null
+                },
+                "color": {
+                    "value": "lightblue"
+                },
+                "tooltip": [
+                    {
+                        "field": "CASE_COUNT",
+                        "title": "Case count"
+                    },
+                                        {
+                        "field": "CASE_COUNT_7DAY_AVG",
+                        "title": "7-day average"
+
+                    },
+                    {
+                        "field": "date_of_interest",
+                        "type": "temporal",
+                        "title": "Date"
+                    }
+                ]
+            }        ,
+            "transform": [{"filter": "datum.date_of_interest > 0"}]
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": false,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 1.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "date_of_interest",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "CASE_COUNT_7DAY_AVG",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "darkblue"
+                },
+                "tooltip": [
+                    {
+                        "field": "CASE_COUNT",
+                        "title": "Case count"
+                    },
+                                        {
+                        "field": "CASE_COUNT_7DAY_AVG",
+                        "title": "7-day average"
+
+                    },
+                    {
+                        "field": "date_of_interest",
+                        "type": "temporal",
+                        "title": "Date"
+                    }
+                ]
+            }        ,
+            "transform": [{"filter": "datum.date_of_interest > 0"}]
+        }
+
+    ]
+}
+
+      function drawChart() {
+        vegaEmbed("#vis2", lineChart);
+      }
+
+      drawChart();
+
+      
+
+
+      const lag = 3;  // sets the data lag
+      const millisecondsPerDay = 86400000 // date formats are in milliseconds
+      const startDate = 1582952400000 // this is the first date of data
+      var currentTime = new Date(); // initialized variable as a date
+      var mostRecentDate = currentTime.getTime() - lag*millisecondsPerDay // gets the timestamp value for the most recent date of data
+      var ninetyDays = mostRecentDate - 90*millisecondsPerDay; // gets the value for 90 days prior
+
+
+
+
+
+    </script>
+  </body>
+</html>
