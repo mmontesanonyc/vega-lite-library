@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+          <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Vconcat and layer</h1>
+    <p>This lays out concatenated and layered charts. It makes for lengthy spec.</p>
+    
+
+    <div id="vis" class="chartdest"></div>
+
+    <hr>
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+
+
+<script type="text/javascript">
+
+  var chart = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Tick chart",
+    "config": {
+              "bar": {
+            "continuousBandSize": 1
+        },
+      "background": "#f8f9fa",
+      "axisX": {
+        "domain": true,
+        "labels": true,
+        "grid": false,
+        "labelFontSize": 8,
+        "tickColor": "#000000",
+        "tickSize": 2,
+        "titleFontSize": 12
+      },
+
+      "axisY": 
+        {
+            "domain": false, 
+            "labels": true, 
+            "grid": true, 
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -10
+        },
+      "view": {"stroke": "transparent"}    },
+    "data": {
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+    },
+
+    "vconcat": [
+
+
+
+      {
+      "layer": [
+      { 
+      "width": "container",
+      "height": 100,
+      "mark": {
+        "type": "bar",
+        "point": true,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+        "y": {"field": "BX_CASE_COUNT", "type": "quantitative", "title": "Bronx"},
+        "color": {"value": "lightskyblue"},
+        "tooltip": [
+          {"field": "BX_CASE_COUNT", "title": "Case count"},
+          {"field": "BX_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": false,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal"},
+        "y": {"field": "BX_CASE_COUNT_7DAY_AVG", "type": "quantitative", "scale": {"domain": [0, 1500]}},
+        "color": {"value": "darkblue"},
+        "tooltip": [
+          {"field": "BX_CASE_COUNT", "title": "Case count"},
+          {"field": "BX_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    }
+  ]
+      },
+
+
+      
+
+
+
+      {
+      "layer": [
+      { 
+      "width": "container",
+      "height": 100,
+      "mark": {
+        "type": "bar",
+        "point": true,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+        "y": {"field": "BK_CASE_COUNT", "type": "quantitative", "title": "Brooklyn"},
+        "color": {"value": "lightskyblue"},
+        "tooltip": [
+          {"field": "BK_CASE_COUNT", "title": "Case count"},
+          {"field": "BK_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": false,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal"},
+        "y": {"field": "BK_CASE_COUNT_7DAY_AVG", "type": "quantitative", "scale": {"domain": [0, 1500]}},
+        "color": {"value": "darkblue"},
+        "tooltip": [
+          {"field": "BK_CASE_COUNT", "title": "Case count"},
+          {"field": "BK_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    }
+  ]
+      },
+
+
+
+
+            {
+      "layer": [
+      { 
+      "width": "container",
+      "height": 100,
+      "mark": {
+        "type": "bar",
+        "point": true,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+        "y": {"field": "MN_CASE_COUNT", "type": "quantitative", "title": "Manhattan"},
+        "color": {"value": "lightskyblue"},
+        "tooltip": [
+          {"field": "MN_CASE_COUNT", "title": "Case count"},
+          {"field": "MN_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": false,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal"},
+        "y": {"field": "MN_CASE_COUNT_7DAY_AVG", "type": "quantitative", "scale": {"domain": [0, 1500]}},
+        "color": {"value": "darkblue"},
+        "tooltip": [
+          {"field": "MN_CASE_COUNT", "title": "Case count"},
+          {"field": "MN_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    }
+  ]
+      },
+
+
+
+
+
+
+
+
+            {
+      "layer": [
+      { 
+      "width": "container",
+      "height": 100,
+      "mark": {
+        "type": "bar",
+        "point": true,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+        "y": {"field": "QN_CASE_COUNT", "type": "quantitative", "title": "Queens"},
+        "color": {"value": "lightskyblue"},
+        "tooltip": [
+          {"field": "QN_CASE_COUNT", "title": "Case count"},
+          {"field": "QN_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": false,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal"},
+        "y": {"field": "QN_CASE_COUNT_7DAY_AVG", "type": "quantitative", "scale": {"domain": [0, 1500]}},
+        "color": {"value": "darkblue"},
+        "tooltip": [
+          {"field": "QN_CASE_COUNT", "title": "Case count"},
+          {"field": "QN_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    }
+  ]
+      },
+
+
+            {
+      "layer": [
+      { 
+      "width": "container",
+      "height": 100,
+      "mark": {
+        "type": "bar",
+        "point": true,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+        "y": {"field": "SI_CASE_COUNT", "type": "quantitative", "title": "Staten Island"},
+        "color": {"value": "lightskyblue"},
+        "tooltip": [
+          {"field": "SI_CASE_COUNT", "title": "Case count"},
+          {"field": "SI_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "point": false,
+        "tooltip": true,
+        "interpolate": "natural",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {"field": "date_of_interest", "type": "temporal"},
+        "y": {"field": "SI_CASE_COUNT_7DAY_AVG", "type": "quantitative", "scale": {"domain": [0, 1500]}},
+        "color": {"value": "darkblue"},
+        "tooltip": [
+          {"field": "SI_CASE_COUNT", "title": "Case count"},
+          {"field": "SI_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+          {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+        ]
+      }
+    }
+  ]
+      }
+
+
+
+    ]
+  }
+
+
+vegaEmbed('#vis', chart);
+
+
+</script>
+</body>
+</html>

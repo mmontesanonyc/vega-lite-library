@@ -21,7 +21,7 @@
 
   <div id="container">
     <h1>Visualization experimentations</h1>
-    <p>This page and repo is going to focus on working with some additional approaches to visualizing with Vega-Lite. The more I built mini-apps, the more in-browser data manipulation I do, so it will be good to develop some additional approaches to ingesting, manipulating, and displaying the data. </p>
+    <p>This page and repo is going to focus on working with some additional approaches to visualizing with Vega-Lite. The more I build mini-apps, the more in-browser data manipulation I do, so it will be good to develop some additional approaches to ingesting, manipulating, and displaying the data. </p>
 
     <p>To start out with, here's Vega-Lite's basic bar chart from their documentation. Instead of storig the data in-line or referecing it as a URL, it uses <code>data.name</code> to reference a dataset called <code>myData</code>. Additional code in the vegaEmbed function binds <code>myData</code> to what could be an in-line array, but is instead an array stored as a variable, <code>dataStorage</code>.</p>
     
@@ -30,30 +30,38 @@
 
     <hr>
 
-    <p>I'll work on similar approaches.</p>
+    <h2>Useful techniques</h2>
+    <li><a href="12-filter-from-single.html">Filtering a trend chart from a single file inside of Vega-Lite</a>: this version calculates back 90 days from present and lets you choose your time range.</li>
+
+    <li><a href="6arquero.html">Arquero, named data source</a>: this ingests data with Arquero and injects the object as a named data source.</li>
+
+    <li><a href="9arquero3-await.html">Importing via Arquero, using await/async</a></li>
+
+
+    <li><a href="13-successful-named-source.html">Named data source and field calculation</a>: this version imports with Arquero, and binds a named data source at runtime - allowing you to store data in the browser as an object, manipulate it, and inject it into the chart. It also uses <code>parseFLoat()</code> to sum fields inside of Vega-Lite.</li>
+
+    <li><a href="5brush.html">Using brush:</a> x-axis range selection on a companion chart</li>
+
+    <li><a href="10arquero3-timeselect-2.html">Using an interactive time selection with number input</a></li>
+
+    <p>Other items:</p>
     <ol>
+      <li><a href="vconcat-and-layer.html">Vertical concatenation and layering within frames</a> - useful for epi curves. </li>
       <li><a href="1sortedbar.html">Sorted bar chart</a></li>
       <li><a href="2linearray.html">Line chart from array</a></li>
       <li><a href="3vconcat.html">Vertical concatenation</a></li>
-      <li><a href="4vconcat2.html">Vertical concatenation - repeat and select</a></li>
-      <li><a href="5brush.html">Using dynamic x-axis range selection on a companion chart</a></li>
-      <li><a href="6arquero.html">Importing data via Arquero</a></li>
-      <li><a href="7arquero2.html">Importing data from Github via Arquero</a></li>
-      <li><a href="8arquero3-timeselect.html">Arquero, interactive date selection, radio buttons</a></li>
-      <li><a href="9arquero3-await.html">Arquero, uses await/async</a></li>
-      <li><a href="10arquero3-timeselect-2.html">Interactive date selection, number input</a></li>
+      <li><a href="4vconcat2.html">Vertical concatenation with repeat and select</a></li>
       <li><a href="11-VL-to-Vega.html">Converting Vega-Lite spec to Vega spec</a></li>
     </ol>
 
     <hr>
     <p>Other things I want to try:</p>
     <ul>
-      <li>Getting data import to line chart to not have axis rendering issues</li>
-      <li>Fixing VL version errors</li>
-      <li>Slicker time-scale selection (calculate totals?)</li>
-      <li>Create templates of Vega charts I'll use a lot - with hover/highlight functionality, select, interaction, etc</li>
-      <li>Concatenated Vega bar charts with hover-highlight</li>
-      <li>Concatenated map/sorted-bar</li>
+      <li>Double-bounded time selection (a full range slider)</li>
+      <li>Calculating totals after a selection</li>
+      <li>Vega templates for common tools, with hover/highlight functionality</li>
+      <li>Vega, highlight, vconcat, with mutual highlighting</li>
+      <li>Vconcat a map and a sorted bar chart, with mutual highlighting</li>
     </ul>
 
     

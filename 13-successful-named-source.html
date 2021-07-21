@@ -22,6 +22,30 @@
 </head>
 <body>
 
+  <style>
+    body {
+    max-width: 700px;
+    margin: auto;
+  }
+
+  #container {
+    max-width: 700px;
+  }
+
+  .chartdest {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 50px;
+  }
+
+  code {
+    color: white;
+    background-color: rgb(73, 73, 73);
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  </style>
+
 
 
   <div id="container">
@@ -29,13 +53,14 @@
     <h1>Using a named data source in Vega-Lite</h1>
     
     <p>This uses <code>data.name</code> in the chart spec, and <a href="https://vega.github.io/vega-lite/docs/data.html#named">vegaEmbed with Vega-View</a> to load data at runtime and update the chart.</p>
-    <p>This results in infinite extent errors, and axes don't render initially - though they render on re-size.</p>
+    <p>This really doesn't want null values in <code>encoding.y.title</code> and <code>encoding.x.title</code> - so ensuring those are populated makes this work. <code>"title": " "</code> works where <code>"title": null</code> does not, FYI.</p>
+    <p>Additionally, this creates a calculated field within vega-Lite, using parseFloat to add columns to create a new one.</p>
 
     <div id="vis2" class="chartdest"></div>
     
 
     
-    <hr><a href="index.html">Back to main</a>
+    
 
 
   </div>
@@ -72,6 +97,9 @@ var spec = {
             ticks: false,
             gridDash: [2],
             gridWidth: 1,
+            titleAngle: 0,
+            titleX: -10,
+            titleY: -10
           },
           view: {
             stroke: "transparent",
@@ -80,6 +108,9 @@ var spec = {
         data: {
           name: "lineData",
         },
+        transform: [
+    {"calculate": "parseFloat(datum.CASE_COUNT) + parseFloat(datum.PROBABLE_CASE_COUNT)", "as": "TOTAL_CASE_COUNT"}
+        ],
         layer: [
           {
             mark: {
@@ -93,19 +124,18 @@ var spec = {
               x: {
                 field: "date_of_interest",
                 type: "temporal",
-                title: "",
+                title: " "
               },
               y: {
-                field: "CASE_COUNT",
-                type: "quantitative",
-                title: null,
+                field: "TOTAL_CASE_COUNT",
+                type: "quantitative"
               },
               color: {
                 value: "lightblue",
               },
               tooltip: [
                 {
-                  field: "CASE_COUNT",
+                  field: "TOTAL_CASE_COUNT",
                   title: "New York City",
                 },
                 {
@@ -127,13 +157,12 @@ var spec = {
             encoding: {
               x: {
                 field: "date_of_interest",
-                type: "temporal",
-                title: "",
+                type: "temporal"
               },
               y: {
-                field: "CASE_COUNT_7DAY_AVG",
+                field: "ALL_CASE_COUNT_7DAY_AVG",
                 type: "quantitative",
-                title: null,
+                title: "Total new cases"
               },
               color: {
                 value: "darkblue",
@@ -141,7 +170,7 @@ var spec = {
               opacity: { value: 0.7 },
               tooltip: [
                 {
-                  field: "CASE_COUNT_7DAY_AVG",
+                  field: "ALL_CASE_COUNT_7DAY_AVG",
                   title: "7-day average",
                 },
                 {

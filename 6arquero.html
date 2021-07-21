@@ -24,7 +24,7 @@
 
     <h1>Line chart from array - using Arquero</h1>
     
-    <p>Similar to others, this uses <code>data.name</code> and enhanced vegaEmbed to chart the data. But with this, the data are imported using Arquero. <code>dt.objects()</code> creates a JS variable that we use as our data variable. This import code is modelled on how we use d3.csv, because Arquero's <a href="https://uwdata.github.io/arquero/api/#loadCSV">suggested loadCSV code</a> doesn't function as expected.</p>
+    <p>Similar to others, this uses <code>data.name</code> and enhanced vegaEmbed to chart the data. But with this, the data are imported using Arquero. <code>dt.objects()</code> creates a JS variable that we use as our data variable. This import code is modelled on how we use d3.csv, though here's documentation for  <a href="https://uwdata.github.io/arquero/api/#loadCSV">suggested loadCSV code</a>.</p>
 
     <div id="vis2" class="chartdest" style="padding:10px;"></div>
     
@@ -81,12 +81,12 @@ var lineChart = {
                 "x": {
                     "field": "week_end_date",
                     "type": "temporal",
-                    "title": ""
+                    "title": " "
                 },
                 "y": {
                     "field": "CITY",
                     "type": "quantitative",
-                    "title": null
+                    "title": " "
                 },
                 "color": {
                     "value": "black"
