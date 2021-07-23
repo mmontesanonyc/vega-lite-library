@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Map with hover highlight</h1>
+    <p>To create this, I made a simple VL map, converted it to Vega spec, and added <code>marks[1].encoding.hover</code>.</p>
+
+
+    <div id="vis1" class="chartdest"></div>
+    
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+
+
+<script type="text/javascript">
+
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "lightgray",
+  "height": 450,
+  "padding": 5,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_1",
+      "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/latest/last7days-by-modzcta.csv",
+      "format": {"type": "csv", "delimiter": ","}
+    },
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/nychealth/covid-maps/main/pp/MODZCTA_2010_RI99999_WGS1984_1_topoms.json",
+      "format": {"type": "topojson", "feature": "collection", "parse": {}},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "datum[\"properties\"] && datum[\"properties\"][\"label\"]",
+          "as": "properties.label"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "source_1",
+          "key": "modzcta",
+          "fields": ["properties.MODZCTA"],
+          "values": [
+            "modzcta",
+            "modzcta_name",
+            "percentpositivity_7day",
+            "people_tested",
+            "people_positive",
+            "median_daily_test_rate",
+            "adequately_tested",
+            "daterange"
+          ]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"percentpositivity_7day\"]) && isFinite(+datum[\"percentpositivity_7day\"])"
+        }
+      ]
+    }
+  ],
+  "projections": [
+    {
+      "name": "projection",
+      "size": {"signal": "[width, height]"},
+      "fit": {"signal": "[data('source_0'), data('data_0')]"}
+    }
+  ],
+  "signals": [
+    {
+      "name": "width",
+      "init": "isFinite(containerSize()[0]) ? containerSize()[0] : 200",
+      "on": [
+        {
+          "update": "isFinite(containerSize()[0]) ? containerSize()[0] : 200",
+          "events": "window:resize"
+        }
+      ]
+    },
+    {
+      "name": "height",
+      "init": "isFinite(containerSize()[1]) ? containerSize()[1] : 200",
+      "on": [
+        {
+          "update": "isFinite(containerSize()[1]) ? containerSize()[1] : 200",
+          "events": "window:resize"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "fill": {"value": "lightgray"},
+          "stroke": {"value": "#ffffff"},
+          "ariaRoleDescription": {"value": "geoshape"}
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "shape",
+      "style": ["geoshape"],
+      "from": {"data": "data_0"},
+      "encode": {
+        "hover": { "strokeWidth": {"value": 2.25} },
+        "update": {
+          "stroke": {"value": "#FFFFFF"},
+          "fill": {"scale": "color", "field": "percentpositivity_7day"},
+          "strokeWidth": {"value": 0.5},
+          "tooltip": {
+            "signal": "{\"ZIP code\": isValid(datum[\"properties.label\"]) ? datum[\"properties.label\"] : \"\"+datum[\"properties.label\"], \"Neighborhood\": isValid(datum[\"modzcta_name\"]) ? datum[\"modzcta_name\"] : \"\"+datum[\"modzcta_name\"], \"Percent positive\": format(datum[\"percentpositivity_7day\"], \"\")}"
+          },
+          "ariaRoleDescription": {"value": "geoshape"},
+          "description": {
+            "signal": "\"percentpositivity_7day: \" + (format(datum[\"percentpositivity_7day\"], \"\")) + \"; ZIP code: \" + (isValid(datum[\"properties.label\"]) ? datum[\"properties.label\"] : \"\"+datum[\"properties.label\"]) + \"; Neighborhood: \" + (isValid(datum[\"modzcta_name\"]) ? datum[\"modzcta_name\"] : \"\"+datum[\"modzcta_name\"]) + \"; Percent positive: \" + (format(datum[\"percentpositivity_7day\"], \"\"))"
+          }
+        }
+      },
+      "transform": [{"type": "geoshape", "projection": "projection"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "linear",
+      "domain": {"data": "data_0", "field": "percentpositivity_7day"},
+      "range": {"scheme": "orangered", "extent": [0.1, 1.5]},
+      "interpolate": "hcl",
+      "zero": false
+    }
+  ],
+  "legends": [
+    {
+      "gradientLength": 100,
+      "orient": "top-left",
+      "title": "7-day percent positive",
+      "titleFontSize": 10,
+      "fill": "color",
+      "direction": "horizontal"
+    }
+  ]
+}
+
+vegaEmbed("#vis1", spec);
+
+
+
+</script>
+</body>
+</html>
