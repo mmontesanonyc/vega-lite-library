@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+  <style>
+    body {
+    max-width: 700px;
+    margin: auto;
+  }
+
+  #container {
+    max-width: 700px;
+  }
+
+  .chartdest {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 50px;
+  }
+
+  code {
+    color: white;
+    background-color: rgb(73, 73, 73);
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  </style>
+
+
+
+  <div id="container">
+
+    <h1>Bar With Highlights</h1>
+    
+    <p>Honing in on style.</p>
+
+    <div id="vis1" class="chartdest" style="border: 1px solid black"></div>
+    
+
+    
+    
+
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "A bar chart with highlighting on hover and selecting on click. (Inspired by Tableau's interaction style.)",
+  "width": "container",
+  "height": 150,
+  "data": {
+    "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/latest/last7days-by-modzcta.csv"
+  },
+  "params": [
+    {
+      "name": "highlight",
+      "select": {"type": "point", "on": "mouseover"}
+    },
+    {"name": "select", "select": "point"}
+  ],
+  "mark": {
+    "type": "bar",
+    "fill": "#4C78A8",
+    "stroke": "black",
+    "cursor": "pointer"
+  },
+  "encoding": {
+    "x": {"field": "modzcta", "type": "ordinal","sort": {"field": "percentpositivity_7day"},"axis": null},
+    "y": {"field": "percentpositivity_7day", "type": "quantitative"},
+    "tooltip": [
+      {"field": "modzcta", "title": "ZIP"},
+      {"field": "modzcta_name", "title": "Neighborhood"},
+      {"field": "percentpositivity_7day", "title": "7-day percent positive"}
+    ],
+    "fillOpacity": {
+      "condition": {"param": "select", "value": 1},
+      "value": 0.3
+    },
+    "strokeWidth": {
+      "condition": [
+        {
+          "param": "select",
+          "empty": false,
+          "value": 2
+        },
+        {
+          "param": "highlight",
+          "empty": false,
+          "value": 1
+        }
+      ],
+      "value": 0
+    }
+  },
+  "config": {
+    "scale": {
+      "bandPaddingInner": 0.08
+    }
+  }
+};
+
+vegaEmbed('#vis1', spec);
+
+
+
+
+
+</script>
+</body>
+</html>
