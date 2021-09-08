@@ -15,17 +15,17 @@ This repo is a small personal library of useful visualization approaches with Ve
     - [Vconcat and layer](https://mmontesanonyc.github.io/vega-lite-library/5a-vconcat-and-layer.html). A lengthy spec, but good charts.
 - [Time Selection](https://mmontesanonyc.github.io/vega-lite-library/6-brush-time-selection.html): using VL's brush to choose a range and display it on concatenated charts.
 - Using Arquero
-    - [Basic line chart](https://mmontesanonyc.github.io/vega-lite-library/) plus inserting via named data source.
-    - [Basic bar](https://mmontesanonyc.github.io/vega-lite-library/) plus a transpose function
-    - [Using Arquero with Await](https://mmontesanonyc.github.io/vega-lite-library/): labelled 10 here.
-- Arquero and time selectino:
-    - [Full-or-90-day selection](https://mmontesanonyc.github.io/vega-lite-library/): Arquero import, 90-day calculation, and basic radio button toggle.
-    - [Set months view](https://mmontesanonyc.github.io/vega-lite-library/): with a reset button. 
-- [Calculating within VL spec](https://mmontesanonyc.github.io/vega-lite-library/): this is the syntax for using parseFloat() to create and chart calculated fields. Also done [here - 13](https://mmontesanonyc.github.io/vega-lite-library/).
+    - [Basic line chart](https://mmontesanonyc.github.io/vega-lite-library/7-arquero-line.html) plus inserting via named data source.
+    - [Basic bar](https://mmontesanonyc.github.io/vega-lite-library/8-arquero-transpose.html) plus a transpose function
+    - [Using Arquero with Await](https://mmontesanonyc.github.io/vega-lite-library/10-arquero-await.html): getting async stuff running.
+- Arquero and time selection:
+    - [Full-or-90-day selection](https://mmontesanonyc.github.io/vega-lite-library/9-arquero-line-timeselection.html): Arquero import, 90-day calculation, and basic radio button toggle.
+    - [Set months view](https://mmontesanonyc.github.io/vega-lite-library/11-arquero-line-timeselection2.html): with a reset button. 
+- [Calculating within VL spec](https://mmontesanonyc.github.io/vega-lite-library/12-filter-and-calculate.html): this is the syntax for using ```parseFloat()``` to create and chart calculated fields. Also done [here](https://mmontesanonyc.github.io/vega-lite-library/13-successful-named-source.html).
 - Map stuff:
-    - [Map and bar](https://mmontesanonyc.github.io/vega-lite-library/), companion and colors.
-    - [Map with basic hover-highlight](https://mmontesanonyc.github.io/vega-lite-library/).
-- [Converting VL spec to Vega spec](https://mmontesanonyc.github.io/vega-lite-library/) should give us a platform to develop simpler Vega-Lite spec, convert, and add some functions unique to Vega.
+    - [Map and bar](https://mmontesanonyc.github.io/vega-lite-library/15-map-and-bar.html), companion and colors.
+    - [Map with basic hover-highlight](https://mmontesanonyc.github.io/vega-lite-library/16-map-highlight.html).
+- [Converting VL spec to Vega spec](https://mmontesanonyc.github.io/vega-lite-library/14-VL-to-Vega.html) should give us a platform to develop simpler Vega-Lite spec, convert, and add some functions unique to Vega.
  
 ## Techniques
 A lot of these are shown pretty simply and clearly in each page, but here's a quick summary.
@@ -45,7 +45,7 @@ We can calculate in ```transform.calculate```, but we need to use ```parseFloat(
  ```
 
 ### Using Arquero
-A lot of these examples bring data in using Arquero. 
+A lot of these examples bring data in using Arquero. This plus using named data sources should let us do a lot more manipulation within the browser.
 
 ### Map things
 - Map with highlight-on-hover
