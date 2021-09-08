@@ -1,7 +1,5 @@
 # Vega-Lite Library
-This repo is a small personal library of useful visualization approaches with Vega-Lite.
-
-Testing visualizations and documenting successful approaches. This repo uses:
+This repo is a small personal library of useful visualization approaches with Vega-Lite. This repo uses:
 - [Vega-Lite](https://vega.github.io/vega-lite/) for visualizations
 - d3: specifically ```d3.csv``` to ingest data
 - [Arquero](https://uwdata.github.io/arquero/) to ingest and manipulate data
