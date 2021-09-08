@@ -214,6 +214,87 @@
       var ninetyDays = mostRecentDate - 90*millisecondsPerDay; // gets the value for 90 days prior
 
 
+      var linechart2 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Tick chart",
+        "width": "container",
+        "height": 250,
+        "config": {
+          "bar": {"continuousBandSize": 1},
+          "background": "#f8f9fa",
+          "axisX": {
+            "domain": true,
+            "labels": true,
+            "grid": false,
+            "labelFontSize": 8,
+            "tickColor": "#000000",
+            "tickSize": 2,
+            "titleFontSize": 12
+          },
+          "axisY": {
+            "domain": false,
+            "labels": true,
+            "grid": true,
+            "ticks": false,
+            "titleAngle": 0,
+            "titleX": 0,
+            "titleY": -10
+          },
+          "view": {"stroke": "transparent"}
+        },
+        "data": {
+          "url": "https://raw.githubusercontent.com/nychealth/coronavirus-data/master/trends/data-by-day.csv"
+        },
+        "transform": [
+              {"calculate": "parseFloat(datum.CASE_COUNT) + parseFloat(datum.PROBABLE_CASE_COUNT)", "as": "Case-count-two"}
+        ],
+        "layer": [
+          {
+            "mark": {
+              "type": "bar",
+              "point": true,
+              "tooltip": true,
+              "interpolate": "natural",
+              "strokeWidth": 0.5
+            },
+            "encoding": {
+              "x": {"field": "date_of_interest", "type": "temporal", "title": ""},
+              "y": {
+                "field": "Case-count-two",
+                "type": "quantitative",
+                "title": "Citywide"
+              },
+              "color": {"value": "lightskyblue"},
+              "tooltip": [
+                {"field": "Case-count-two", "title": "Case count"},
+                {"field": "ALL_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+                {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+              ]
+            }
+          },
+          {
+            "mark": {
+              "type": "line",
+              "point": false,
+              "tooltip": true,
+              "interpolate": "natural",
+              "strokeWidth": 1.5
+            },
+            "encoding": {
+              "x": {"field": "date_of_interest", "type": "temporal"},
+              "y": {"field": "ALL_CASE_COUNT_7DAY_AVG", "type": "quantitative"},
+              "color": {"value": "darkblue"},
+              "tooltip": [
+                {"field": "Case-count-two", "title": "Case count"},
+                {"field": "ALL_CASE_COUNT_7DAY_AVG", "title": "7-day average"},
+                {"field": "date_of_interest", "type": "temporal", "title": "Date"}
+              ]
+            }
+          }
+        ]
+        };
+
+        vegaEmbed("#vis3",linechart2);
 
 
 

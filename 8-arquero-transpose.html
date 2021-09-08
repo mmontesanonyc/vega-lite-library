@@ -29,7 +29,6 @@
     <h1>Bar chart using Arquero</h1>
     
     <p>Similar to others, this uses <code>data.name</code> and enhanced vegaEmbed to chart the data. But with this, the data are imported from a CSV on Github, using Arquero. <code>dt.objects()</code> creates a JS variable that we use as our data variable. This import code is modelled on how we use d3.csv, because Arquero's <a href="https://uwdata.github.io/arquero/api/#loadCSV">suggested loadCSV code</a> doesn't function as expected. Something about async functions.</p>
-    <p>It's interesting to note that despite using the same Arquero to array to Vega.View approach to inserting data from an object, this doesn't have the axis labeling problems. </p>
     <p>Stuck in a little transpose function, because why not?</p>
 
     <button onclick="transpose()">Transpose</button>
