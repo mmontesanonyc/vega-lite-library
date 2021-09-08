@@ -25,10 +25,13 @@
 
   <div id="container">
 
-    <h1>Line chart from array</h1>
+    <h1>Line chart from named source</h1>
     
-    <p>Similar to others, this uses <code>data.name</code> and vegaEmbed enhanced with Vega-View to chart the data (<a href="https://vega.github.io/vega-lite/docs/data.html#named">right from documentation</a>). Some bug has removed the x-axis labels on load, however - though if you look in the console, you'll see infinite extents, and axis labels only load on window-resize. Sounds like it's drawing the chart <em>before</em> loading the data.</p>
-    <p>This also stores the spec in a separate file - I assuming doing this spec storage means you can't directly manipulate it.</p>
+    <p>Similar to others, this uses <code>data.name</code> and vegaEmbed enhanced with Vega-View to chart the data (<a href="https://vega.github.io/vega-lite/docs/data.html#named">right from documentation</a>). 
+      
+      <p>Initially, a bug has removes the x-axis labels on load: if you have <code>layer.encoding.x.title = null</code> then it won't render. It's best for that to be <code>"title": " "</code>.
+        
+    <p>This also stores the spec in a separate file - I assuming doing this spec storage means you can't directly manipulate it in the browser.</p>
 
     <div id="vis2" class="chartdest"></div>
     

@@ -22,10 +22,11 @@
   <div id="container">
 
     <h1>Sorted bar chart</h1>
+    <p>This ingests a csv using d3.csv(); it loads the data into an object and gives us an opportunity to manipulate that object before inserting it into the chart. A smart approach might be declaring a constant equal to the original ingestion, and assigning that as the value of another variable - so that we store both a constant/original version, and a manipulated one.  </p>
 
-    <p>This visualization uses the same approach with <code>data.name</code> and the additional code in <code>vegaEmbed</code> to read an array of data that has been ingested into the browser.</p>
+    <p>This visualization spec uses the same approach with <code>data.name</code> and the additional code in <code>vegaEmbed</code> to read an array of data that has been ingested into the browser.</p>
 
-    <p>Additionally, in <code>layer[0].encoding.x</code>, we have a sort on the bar chart.</p>
+    <p>Additionally, in <code>layer[0].encoding.x</code>, we have a sort on the bar chart. But, it sorts by alphabetical order.</p>
 
     <div id="vis1" class="chartdest"></div>
     
@@ -41,7 +42,7 @@
 
 
   /*
-  This method works a little bit differnetly. Within the d3.csv function, it loads the CSV as an array in JS variable. 
+  This method works a little bit differently. Within the d3.csv function, it loads the CSV as an array in JS variable. 
 
   The Spec (spec) references the name of a dataset, barData.
 

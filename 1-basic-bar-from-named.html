@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <!--CSS-->
+        <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+    <h1>Basic bar</h1>
+    <p>To start out with, here's Vega-Lite's basic bar chart from their documentation. Instead of storing the data in-line or referecing it as a URL, it uses <code>data.name</code> to reference a dataset called <code>myData</code>. Additional code in the vegaEmbed function binds <code>myData</code> to what could be an in-line array, but is instead an array stored as a variable, <code>dataStorage</code>.</p>
+    
+    <p>Basic bar chart</p>
+    <div id="vis3" class="chartdest"></div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+var simple = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "description": "A simple bar chart with embedded data.",
+  "data": {
+    "name": "myData"
+  },
+  "mark": "bar",
+  "encoding": {
+    "x": {"field": "b", "type": "quantitative"},
+    "y": {"field": "a", "type": "nominal"}
+  }
+}
+
+var dataStorage = [
+    {"a": "A", "b": 28},
+      {"a": "B", "b": 55},
+      {"a": "C", "b": 43},
+      {"a": "D", "b": 91}
+    ]
+
+vegaEmbed('#vis3', simple).then(res =>
+  res.view
+    .insert('myData', dataStorage)
+    .run()
+);
+</script>
+</body>
+</html>

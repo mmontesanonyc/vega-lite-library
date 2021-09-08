@@ -38,12 +38,12 @@
                 "x": {
                     "field": "week_end_date",
                     "type": "temporal",
-                    "title": ""
+                    "title": " "
                 },
                 "y": {
                     "field": "CITY",
                     "type": "quantitative",
-                    "title": null
+                    "title": " "
                 },
                 "color": {
                     "value": "black"
