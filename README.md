@@ -6,26 +6,26 @@ This repo is a small personal library of useful visualization approaches with Ve
 - Various publicly-available data on Github, much of it from the [NYC DOHMH coronavirus-data repository](https://github.com/nychealth/coronavirus-data)
 
 ## Pages
-- [Basic bar](): from named data source: storing data outside the spec, inserting it with Vega View.
-- [Sorted bar](): d3.csv, named data source, and a sorted bar chart.
-- [Line chart](): d3.csv, named source, remote spec.
+- [Basic bar](https://mmontesanonyc.github.io/vega-lite-library/1-basic-bar-from-named.html): from named data source: storing data outside the spec, inserting it with Vega View.
+- [Sorted bar](https://mmontesanonyc.github.io/vega-lite-library/2-sorted-bar.html): d3.csv, named data source, and a sorted bar chart.
+- [Line chart](https://mmontesanonyc.github.io/vega-lite-library/3-line-from-named.html): d3.csv, named source, remote spec.
 - Using vconcat
-    - [Small multiples](): charting several series from a single source.
-    - [Enhancing with repeat]() - using repeat and a do-nothing selection.
-    - [Vconcat and layer](). A lengthy spec, but good charts.
-- [Time Selection](): using VL's brush to choose a range and display it on concatenated charts.
+    - [Small multiples](https://mmontesanonyc.github.io/vega-lite-library/4-small-multiples-vconcat.html): charting several series from a single source.
+    - [Enhancing with repeat](https://mmontesanonyc.github.io/vega-lite-library/5-vconcat-with-select.html) - using repeat and a do-nothing selection.
+    - [Vconcat and layer](https://mmontesanonyc.github.io/vega-lite-library/5a-vconcat-and-layer.html). A lengthy spec, but good charts.
+- [Time Selection](https://mmontesanonyc.github.io/vega-lite-library/6-brush-time-selection.html): using VL's brush to choose a range and display it on concatenated charts.
 - Using Arquero
-    - [Basic line chart]() plus inserting via named data source.
-    - [Basic bar]() plus a transpose function
-    - [Using Arquero with Await](): labelled 10 here.
+    - [Basic line chart](https://mmontesanonyc.github.io/vega-lite-library/) plus inserting via named data source.
+    - [Basic bar](https://mmontesanonyc.github.io/vega-lite-library/) plus a transpose function
+    - [Using Arquero with Await](https://mmontesanonyc.github.io/vega-lite-library/): labelled 10 here.
 - Arquero and time selectino:
-    - [Full-or-90-day selection](): Arquero import, 90-day calculation, and basic radio button toggle.
-    - [Set months view](): with a reset button. 
-- [Calculating within VL spec](): this is the syntax for using parseFloat() to create and chart calculated fields. Also done [here - 13]().
+    - [Full-or-90-day selection](https://mmontesanonyc.github.io/vega-lite-library/): Arquero import, 90-day calculation, and basic radio button toggle.
+    - [Set months view](https://mmontesanonyc.github.io/vega-lite-library/): with a reset button. 
+- [Calculating within VL spec](https://mmontesanonyc.github.io/vega-lite-library/): this is the syntax for using parseFloat() to create and chart calculated fields. Also done [here - 13](https://mmontesanonyc.github.io/vega-lite-library/).
 - Map stuff:
-    - [Map and bar](), companion and colors.
-    - [Map with basic hover-highlight]().
-- [Converting VL spec to Vega spec]() should give us a platform to develop simpler Vega-Lite spec, convert, and add some functions unique to Vega.
+    - [Map and bar](https://mmontesanonyc.github.io/vega-lite-library/), companion and colors.
+    - [Map with basic hover-highlight](https://mmontesanonyc.github.io/vega-lite-library/).
+- [Converting VL spec to Vega spec](https://mmontesanonyc.github.io/vega-lite-library/) should give us a platform to develop simpler Vega-Lite spec, convert, and add some functions unique to Vega.
  
 ## Techniques
 A lot of these are shown pretty simply and clearly in each page, but here's a quick summary.
