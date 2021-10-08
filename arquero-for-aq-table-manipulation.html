@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+<script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+<script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+<script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+<!--D3-->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<!--CSS-->
+<link rel="stylesheet" href="css/style.css">
+
+<!--Arquero-->
+<script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+
+</head>
+<body>
+
+<div id="container">
+<h1>Arquero, table filtering, and more</h1>
+<p>We can grab a file and start working with it. Obviously we have problems with interpreting zips as numbers.</p>
+
+<div id="printTable">
+
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+// Loads the csv as an arquero table
+aq.loadCSV('uhflist.csv').then(function(data) {
+  dt = data;
+  tableManipulation();
+});
+
+function tableManipulation() {
+  dt.print();
+  console.log(dt.columnNames())
+  dt.column('Zipcodes').toString();
+  document.getElementById('printTable').innerHTML = dt.toHTML();
+
+}
+
+</script>
+</body>
+</html>
