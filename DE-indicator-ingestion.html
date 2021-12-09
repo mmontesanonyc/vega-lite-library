@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <!--CSS-->
+        <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+    <h1>Initial Indicators.JSON ingestion</h1>
+
+    <h2>Basic indicator ingestion</h2>
+    <p>We're going to ingest indicator metadata into the browser.</p>
+
+    <button onclick="printIndicatorNames()">Print indicator names</button>
+
+    <div id="output" style="width:100%; height: 350px; overflow-y: scroll;">
+
+    </div>
+
+    <h2>Retrieve an indicator by ID</h2>
+    <p>On selection, print below. Handle Nulls.</p>
+    <button onclick="submit(2)">Submit</button>
+    <br>
+    <h3>Indicator: <span id="indID"></span></h3>
+
+    <h4>Summarize</h4>
+    <ul>
+      <li id="measureOne"></li>
+      <li id="measureTwo"></li>
+    </ul>
+
+    <h4>Map</h4>
+
+    <h4>Trend</h4>
+
+    <h4>Link</h4>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+  
+  var indicators;
+
+  d3.json('https://raw.githubusercontent.com/nycehs/NeighborhoodReports/master/Data%20Explorer%20Files/indicators.json').then(function(data) {
+    indicators = data
+  });
+
+
+
+  function printIndicatorNames() {
+    var dataPlay = [];
+    for (let i = 0; i < indicators.length; i++) {
+      dataPlay.push(indicators[i].IndicatorName)
+    }
+    document.getElementById('output').innerHTML = dataPlay;
+  };
+
+
+// this works to filter indicators. What we need to do is pass a variable into it from the form.
+function submit(z) {
+  const oneIndicator = indicators.filter(x => x.IndicatorID == z);
+  if (oneIndicator) {
+    console.table(oneIndicator[0])  
+    document.getElementById('indID').innerHTML = oneIndicator[0].IndicatorName;
+    document.getElementById('measureOne').innerHTML = oneIndicator[0].Measures[0].MeasurementType;
+    document.getElementById('measureTwo').innerHTML = oneIndicator[0].Measures[1].MeasurementType;
+
+
+  } else {};
+};
+
+</script>
+</body>
+</html>
