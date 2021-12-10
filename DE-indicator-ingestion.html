@@ -43,21 +43,6 @@
         });
     </script>
 
-    <button onclick="printIndicatorNames()">Print indicator names</button>
-
-    <div id="output" style="width:100%; height: 350px; overflow-y: scroll;"></div>
-
-    <script type="text/javascript">
-        // PRINT FUNCTION
-        function printIndicatorNames() {
-          var dataPlay = [];
-          for (let i = 0; i < indicators.length; i++) {
-            dataPlay.push(indicators[i].IndicatorName)
-          }
-          document.getElementById('output').innerHTML = dataPlay;
-        };
-    </script>
-
     <hr>
 
     <h2>Make Indicator List and retrieve info</h2>
@@ -118,6 +103,7 @@
         }
     </script>
 
+    <br><br><br><br><br><br>
     <hr>
     <h2>Retrieve an indicator by ID</h2>
     <p>Or, find by Indicator ID (kind of useless, but good practice).</p>
