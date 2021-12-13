@@ -18,6 +18,14 @@
 
     <!--Arquero-->
     <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+
+    <!--DataTables CSS-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+    <!--jQuery and DataTables JS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
 </head>
 <body>
 
@@ -87,7 +95,11 @@
 
         <hr>
 
-        <div id="showTable">
+        <h2>Table printed using Arquero</h2>
+        <p>We're going to print the table using Arquery, and then style/JS-ify it using DataTables.</p>
+        <div id="showTable" class="display uniqueTable" style="width: 100%">
+
+
 
 
         </div>
@@ -116,9 +128,11 @@
         aq.loadCSV(dataFile).then(function(data) {
           dataTable = data;
           // dataTable.print(); // print to console to check
+          document.getElementById('showTable').innerHTML = dataTable.toHTML(); 
+          document.querySelector('#showTable table').id = "tableID" // this gives the table an ID (table code gen'd by Arquero)
+          $('#tableID').DataTable(); // this uses DataTables to style the table
         });
 
-        // document.getElementById('showTable').innerHTML = dataTable.toHTML(); // This doesn't work. Why?
 
         // Print Indicator Name to page
         document.getElementById('indID1').innerHTML = selectedIndicator[0].IndicatorName;
@@ -131,9 +145,8 @@
         d3.csv(dataFile).then(data => {
           dataTable2 = data;
           console.log(dataTable2)
-      });
-
-        
+          // now we have dataTable2 as our variable in the browser
+          });
       }
 
 
