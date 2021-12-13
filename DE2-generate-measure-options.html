@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--Arquero-->
+    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+</head>
+<body>
+
+
+
+  <div id="container">
+    <h1>Generate Measure Options</h1>
+    <p>In this, we choose from the Indicator List. JS generates measure dropdown options based on what's available in Indicators.JSON.</p>
+
+    <script type="text/javascript">
+        // Set up variable to hold indicators
+        var indicators;
+
+        // load json with D3
+        d3.json('https://raw.githubusercontent.com/nycehs/NeighborhoodReports/master/Data%20Explorer%20Files/indicators.json').then(function(data) {
+          indicators = data;
+
+        // extract and print names
+        const names = indicators.map(indicator => indicator.IndicatorName)
+        // console.table(names)
+
+        populateDropDownList()
+
+        });
+
+        function populateDropDownList() {
+          var ddlIndicators = document.getElementById('indicatorList');
+          for (var i = 0; i < indicators.length; i++) {
+          var option = document.createElement("OPTION");
+          option.innerHTML = indicators[i].IndicatorName;
+          option.value = indicators[i].IndicatorID;
+          ddlIndicators.options.add(option);
+          }
+          }
+    </script>
+
+
+
+    <hr>
+    <h2>Ingest data table</h2>
+    <label for="indicatorList">Choose an Indicator:</label>
+    <select name="indicatorList" id="indicatorList">
+      <option value="">Choose an indicator</option>
+    </select>
+
+    <h3>Indicator: <span id="indID1" style="font-weight:normal;"></span></h3>
+
+    <div id="measureContainer" style="display:none;">
+    <label for="measureList">Show data as:</label>
+      <select name="measureList" id="measureList">
+      </select>
+    </div>
+
+    <br>
+
+    <div id="timeContainer" style="display:none;">
+      <label for="timeList">Change time:</label>
+        <select name="timeList" id="timeList">
+        </select>
+      </div>
+
+      <br>
+
+      <div id="geoContainer" style="display:none;">
+        <label for="geoList">Change geography:</label>
+          <select name="geoList" id="geoList">
+          </select>
+        </div>
+        
+        <br>
+        <em>Note that Available Times and Available Geographies vary by measure, but this quick page mock doesn't change based on selected Measure - it just loads Measures[0] based on the selected Indicator.</em>
+        <br>
+
+
+
+    <script>
+      var dataTable; // this will be our dataTable variable that holds the data we'll filter
+      var dataFile; // this will be our file with actual data - currently in CSV form, currenlty only 2380.csv
+      var selectedIndicator; // this is an array of just the selected indicator from Indicators.json
+
+      // Indicator List event listener
+      document.getElementById('indicatorList').addEventListener('change',function() {
+        var x = document.getElementById('indicatorList').value
+        console.log(x) // log to console
+        filterIndicators(x); // run this filterIndicators function
+        });
+
+        // Filter Indicators.JSON to just selected Indicator
+        function filterIndicators(y) {
+        selectedIndicator = indicators.filter(indicator => indicator.IndicatorID == y);
+        console.table(selectedIndicator);
+
+        // Get filename for dataFile
+        dataFile = selectedIndicator[0].IndicatorID + ".csv"
+
+        // Loads data as an arquero table
+        aq.loadCSV(dataFile).then(function(data) {
+        dataTable = data;
+        dataTable.print(); // print to console to check
+        });
+
+        // Print Indicator Name to page
+        document.getElementById('indID1').innerHTML = selectedIndicator[0].IndicatorName;
+
+        // Create drop-down lists (this could be refactored/simplified)
+        printMeasures();
+        printYears();
+        printGeographies();
+      }
+
+
+      // These functions create drop-down lists based on details in Indicators.json
+      function printMeasures() {
+            var ddl = document.getElementById('measureList');
+            ddl.innerHTML = ''; // clear list from last time!
+            for (var i = 0; i < selectedIndicator[0].Measures.length; i++) {
+            var option = document.createElement("OPTION");
+            option.innerHTML = selectedIndicator[0].Measures[i].MeasurementType;
+            option.value = selectedIndicator[0].Measures[i].MeasureID;
+            ddl.options.add(option);
+            };
+            document.getElementById('measureContainer').style.display = "block"
+        }
+
+
+      function printYears() {
+          var ddl = document.getElementById('timeList');
+          ddl.innerHTML = ''; // clear list from last time!
+          for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableTimes.length; i++) {
+            var option = document.createElement("OPTION");
+            option.innerHTML = selectedIndicator[0].Measures[0].AvailableTimes[i].TimeDescription;
+            option.value = selectedIndicator[0].Measures[0].AvailableTimes[i].TimeDescription;
+              if (option.value == 2019) {
+                option.selected = true;
+              } // this would need to be replaced with a "get max value" calculation
+            ddl.options.add(option);
+            };
+          document.getElementById('timeContainer').style.display = "block"
+      }
+
+
+
+      function printGeographies() {
+        var ddl = document.getElementById('geoList');
+        ddl.innerHTML = ''; // clear list from last time!
+        for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableGeographyTypes.length; i++) {
+          var option = document.createElement("OPTION");
+          option.innerHTML = selectedIndicator[0].Measures[0].AvailableGeographyTypes[i].GeoType;
+          ddl.options.add(option);
+          };
+          document.getElementById('geoContainer').style.display = "block"
+      }
+
+
+    </script>
+
+
+
+</body>
+</html>

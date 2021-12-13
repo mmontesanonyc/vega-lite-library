@@ -25,6 +25,10 @@
 
     <h2>Basic indicator ingestion</h2>
     <p>We're going to ingest indicator metadata into the browser.</p>
+    <p>In our Viz Module, a topic's markdown file (content/data-explorer/topic.md) will have frontmatter that identifies the indicators (datasets) that are associated with that topic.  </p>
+    <p>Selecting an indicator from a drop-down list on a topic's page will tell the system what indicator to retrieve from Indicators.json, our metadata file.</p>
+    <p>Information in Indicators.json will tell the page what filters/options to offer for each visualization: measures, geographies, years available, and more.</p>
+    <p>A user interacting with these options will filter an indicator-specific data file, and feed the data into the table (powered by DataTables) and visualizations (powered by Vega-Lite).</p>
 
     <script type="text/javascript">
         // Set up variable to hold indicators
@@ -102,6 +106,18 @@
 
         }
     </script>
+
+    <hr style="margin-top: 150px;">
+    <h2>Ingest data table</h2>
+    <p>Create dropdowns with filters for:</p>
+    <ul>
+      <li>Measure</li>
+      <li>Geography</li>
+      <li>Year</li>
+    </ul>
+
+    <p>Use that to filter a indicator data file and deliver to a front-end DataTables. </p>
+
 
     <br><br><br><br><br><br>
     <hr>
