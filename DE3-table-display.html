@@ -94,9 +94,11 @@
         <br>
 
         <hr>
+        <em>This currently filters Indicators.json and creates measure-option dropdowns, and it displays indicator data using tables, but those two functions aren't connected. We'll have to build data-filtering functions to take the dropdown inputs, filter our data variable, and deliver that variable to the front-end table.</em>
+        <hr>
 
         <h2>Table printed using Arquero</h2>
-        <p>We're going to print the table using Arquery, and then style/JS-ify it using DataTables.</p>
+        <p>We're going to print the table using Arquer0, and then style/JS-ify it using DataTables.</p>
         <div id="showTable" class="display uniqueTable" style="width: 100%">
 
 
@@ -128,7 +130,7 @@
         aq.loadCSV(dataFile).then(function(data) {
           dataTable = data;
           // dataTable.print(); // print to console to check
-          document.getElementById('showTable').innerHTML = dataTable.toHTML(); 
+          document.getElementById('showTable').innerHTML = dataTable.toHTML(); // print dataTable to HTML
           document.querySelector('#showTable table').id = "tableID" // this gives the table an ID (table code gen'd by Arquero)
           $('#tableID').DataTable(); // this uses DataTables to style the table
         });
@@ -145,7 +147,7 @@
         d3.csv(dataFile).then(data => {
           dataTable2 = data;
           console.log(dataTable2)
-          // now we have dataTable2 as our variable in the browser
+          // now we have dataTable2 as our variable in the browser. 
           });
       }
 
@@ -153,6 +155,7 @@
       // These functions create drop-down lists based on details in Indicators.json
       function printMeasures() {
             var ddl = document.getElementById('measureList');
+            ddl.innerHTML = ''; // clear list from last time!
             for (var i = 0; i < selectedIndicator[0].Measures.length; i++) {
             var option = document.createElement("OPTION");
             option.innerHTML = selectedIndicator[0].Measures[i].MeasurementType;
@@ -165,6 +168,7 @@
 
       function printYears() {
           var ddl = document.getElementById('timeList');
+          ddl.innerHTML = ''; // clear list from last time!
           for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableTimes.length; i++) {
             var option = document.createElement("OPTION");
             option.innerHTML = selectedIndicator[0].Measures[0].AvailableTimes[i].TimeDescription;
@@ -181,6 +185,7 @@
 
       function printGeographies() {
         var ddl = document.getElementById('geoList');
+        ddl.innerHTML = ''; // clear list from last time!
         for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableGeographyTypes.length; i++) {
           var option = document.createElement("OPTION");
           option.innerHTML = selectedIndicator[0].Measures[0].AvailableGeographyTypes[i].GeoType;
