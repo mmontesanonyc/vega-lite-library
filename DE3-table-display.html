@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
-    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
-    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
-    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+  <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+  <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+  <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
 
-    <!--D3-->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!--D3-->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <!--CSS-->
-    <link rel="stylesheet" href="css/style.css">
+  <!--CSS-->
+  <link rel="stylesheet" href="css/style.css">
 
-    <!--Arquero-->
-    <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
+  <!--Arquero-->
+  <script src="https://cdn.jsdelivr.net/npm/arquero@latest"></script>
 
-    <!--DataTables CSS-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <!--DataTables CSS-->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 
-    <!--jQuery and DataTables JS-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <!--jQuery and DataTables JS-->
+	<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/rowgroup/1.1.4/js/dataTables.rowGroup.min.js"></script>
+
+
 
 </head>
+
 <body>
 
 
@@ -35,25 +47,23 @@
     <h1>Get and filter CSV data file</h1>
 
     <p>We're going to ingest indicator metadata into the browser.</p>
-    <p>In our Viz Module, a topic's markdown file (content/data-explorer/topic.md) will have frontmatter that identifies the indicators (datasets) that are associated with that topic.  </p>
-    <p>Selecting an indicator from a drop-down list on a topic's page will tell the system what indicator to retrieve from Indicators.json, our metadata file.</p>
-    <p>Information in Indicators.json will tell the page what filters/options to offer for each visualization: measures, geographies, years available, and more.</p>
-    <p>A user interacting with these options will filter an indicator-specific data file, and feed the data into the table (powered by DataTables) and visualizations (powered by Vega-Lite).</p>
+    <p>In our Viz Module, a topic's markdown file (content/data-explorer/topic.md) will have frontmatter that identifies
+      the indicators (datasets) that are associated with that topic, and presents a dropdown list. </p>
+    <p>Selecting an indicator from the drop-down list on a topic's page will tell the system what indicator to retrieve
+      from Indicators.json, our metadata file.</p>
+      <p>That's where this page 'starts' - on a hypothetical topic page with a single available indicator. Upon indicator selection, this page:
+        <ul>
+          <li>Identifies the default measure by looping through measures and looking for an age-adjusted rate</li>
+          <li>Loops through chosen indicator and presents available measures</li>
+          <li>Loops through the selected measure and presents available years and geographies</li>
+          <li>Tells the system which data file to load, and delivers it to an Arquero/DataTables table</li>
+        </ul>
+      </p>
+    <p>A user interacting with these options will (eventaully) filter an indicator-specific data file, and feed the data into the
+      table (powered by DataTables) and visualizations (powered by Vega-Lite).</p>
 
     <script type="text/javascript">
-        // Set up variable to hold indicators
-        var indicators;
 
-        // load json with D3
-        d3.json('https://raw.githubusercontent.com/nycehs/NeighborhoodReports/master/Data%20Explorer%20Files/indicators.json').then(function(data) {
-          indicators = data;
-
-        // extract and print names
-        const names = indicators.map(indicator => indicator.IndicatorName)
-        // console.table(names)
-
-
-        });
     </script>
 
 
@@ -68,7 +78,7 @@
 
     <h3>Indicator: <span id="indID1" style="font-weight:normal;"></span></h3>
     <div id="measureContainer" style="display:none;">
-    <label for="measureList">Show data as:</label>
+      <label for="measureList">Show data as:</label>
       <select name="measureList" id="measureList">
       </select>
     </div>
@@ -77,122 +87,186 @@
 
     <div id="timeContainer" style="display:none;">
       <label for="timeList">Change time:</label>
-        <select name="timeList" id="timeList">
-        </select>
-      </div>
+      <select name="timeList" id="timeList">
+      </select>
+    </div>
 
-      <br>
+    <br>
 
-      <div id="geoContainer" style="display:none;">
-        <label for="geoList">Change geography:</label>
-          <select name="geoList" id="geoList">
-          </select>
-        </div>
-
-        <br>
-        <em>Note that Available Times and Available Geographies vary by measure, but this quick page mock doesn't change based on selected Measure - it just loads Measures[0] based on the selected Indicator.</em>
-        <br>
-
-        <hr>
-        <em>This currently filters Indicators.json and creates measure-option dropdowns, and it displays indicator data using tables, but those two functions aren't connected. We'll have to build data-filtering functions to take the dropdown inputs, filter our data variable, and deliver that variable to the front-end table.</em>
-        <hr>
-
-        <h2>Table printed using Arquero</h2>
-        <p>We're going to print the table using Arquer0, and then style/JS-ify it using DataTables.</p>
-        <div id="showTable" class="display uniqueTable" style="width: 100%">
+    <div id="geoContainer" style="display:none;">
+      <label for="geoList">Change geography:</label>
+      <select name="geoList" id="geoList">
+      </select>
+    </div>
 
 
 
+    <hr>
+    <em>This currently filters Indicators.json and creates measure-option dropdowns, and it displays indicator data
+      using tables, but those two functions aren't connected. We'll have to build data-filtering functions to take the
+      dropdown inputs, filter our data variable, and deliver that variable to the front-end table.</em>
+    <hr>
 
-        </div>
+    <h2>Table printed using Arquero</h2>
+    <p>We're going to print the table using Arquero, and then style/JS-ify it using DataTables.</p>
+    <p><strong>Next up:</strong> 
+      <ul>
+        <li>Put measures into columns using Arquero (table will have all measures so selection isn't necessary?)</li>
+        <li>Render value as bar, and other DataTables options</li>
+        <li>Create Geo Lookup file and join to neighborhood names</li>
+      </ul></p>
+    <div id="showTable" class="display uniqueTable" style="width: 100%">
+
+
+
+
+    </div>
 
 
     <script>
+      var indicators; // variable to hold Indicators.json
       var dataTable; // this will be our dataTable variable that holds the data we'll filter
-      var dataTable2
+      var dataTable2 // holding place for d3 ingestion approach
       var dataFile; // this will be our file with actual data - currently in CSV form, currenlty only 2380.csv
       var selectedIndicator; // this is an array of just the selected indicator from Indicators.json
+      var defaultMeasure // default measure ID, found by function to ID adjusted rates
+      var selectedMeasure // measure filtered from selectedIndicator
+      var filteredArqueroTable // after filtering
 
-      // Indicator List event listener
-      document.getElementById('indicatorList2').addEventListener('change',function() {
+      // First, load Indicators.json
+      d3.json('https://raw.githubusercontent.com/nycehs/NeighborhoodReports/master/Data%20Explorer%20Files/indicators.json').then(function (data) {
+        indicators = data;
+        // const names = indicators.map(indicator => indicator.IndicatorName) // extract and print names
+        // console.table(names)
+      });
+
+      // Then, listen to Indicator List and filter selection
+      document.getElementById('indicatorList2').addEventListener('change', function () {
         var x = document.getElementById('indicatorList2').value
         filterIndicators(x); // run this filterIndicators function
-        });
+      });
 
-        // Filter Indicators.JSON to just selected Indicator
-        function filterIndicators(y) {
-        selectedIndicator = indicators.filter(indicator => indicator.IndicatorID == y);
+      // When user chooses an indicator, filter Indicators.json to selection, and run follow-ups.
+      function filterIndicators(y) {
+        selectedIndicator = indicators.filter(indicator => indicator.IndicatorID == y); // filter indicators.json to selected
+        dataFile = selectedIndicator[0].IndicatorID + ".csv" // get data file name
+        document.getElementById('indID1').innerHTML = selectedIndicator[0].IndicatorName; // print Indicator Name to page
 
-        // Get filename for dataFile
-        dataFile = selectedIndicator[0].IndicatorID + ".csv"
+        // get default measure
+        getDefaultMeasure()
 
-        // Loads data as an arquero table
-        aq.loadCSV(dataFile).then(function(data) {
-          dataTable = data;
-          // dataTable.print(); // print to console to check
-          document.getElementById('showTable').innerHTML = dataTable.toHTML(); // print dataTable to HTML
-          document.querySelector('#showTable table').id = "tableID" // this gives the table an ID (table code gen'd by Arquero)
-          $('#tableID').DataTable(); // this uses DataTables to style the table
-        });
+      }
 
-
-        // Print Indicator Name to page
-        document.getElementById('indID1').innerHTML = selectedIndicator[0].IndicatorName;
-
+      // this is logic to find the default measure. There may be better ways to loop through the measures and stop at the priority measure type.
+      function getDefaultMeasure() {
+        for (var i = 0; i < selectedIndicator[0].Measures.length; i++) {
+          if (selectedIndicator[0].Measures[i].MeasurementType.includes("Adjusted Rate")) {
+            defaultMeasure = selectedIndicator[0].Measures[i].MeasureID;
+            break; // break from loop if it finds an adjusted rate
+          } else if (selectedIndicator[0].Measures[i].MeasurementType.includes("Rate")) {
+            defaultMeasure = selectedIndicator[0].Measures[i].MeasureID;
+          } else if (selectedIndicator[0].Measures[i].MeasurementType.includes("Percent")) {
+            defaultMeasure = selectedIndicator[0].Measures[i].MeasureID;
+          } else {
+            defaultMeasure = selectedIndicator[0].Measures[0].MeasureID;
+          };
+        }
+        console.log('default measure is ' + defaultMeasure);
+        selectedMeasure = selectedIndicator[0].Measures.filter(measure => measure.MeasureID == defaultMeasure)
         // Create drop-down lists (this could be refactored/simplified)
         printMeasures();
+        // create measure-specific options
         printYears();
         printGeographies();
 
-        d3.csv(dataFile).then(data => {
-          dataTable2 = data;
-          console.log(dataTable2)
-          // now we have dataTable2 as our variable in the browser. 
-          });
+        // load data
+        loadData();
       }
 
 
-      // These functions create drop-down lists based on details in Indicators.json
-      function printMeasures() {
-            var ddl = document.getElementById('measureList');
-            ddl.innerHTML = ''; // clear list from last time!
-            for (var i = 0; i < selectedIndicator[0].Measures.length; i++) {
-            var option = document.createElement("OPTION");
-            option.innerHTML = selectedIndicator[0].Measures[i].MeasurementType;
-            option.value = selectedIndicator[0].Measures[i].MeasureID;
-            ddl.options.add(option);
-            };
-            document.getElementById('measureContainer').style.display = "block"
-        }
+      // Follow-up functions - load data and print measure options to create dropdown lists based on Indicators.json spec
+      function loadData() {
+        // Loads data as an arquero table
+        aq.loadCSV(dataFile).then(function (data) {
+          dataTable = data;
+          // dataTable.print(); // print to console to check
 
+          // filter by selected measure
+          console.log('default measure is: ' + defaultMeasure)
+
+          /*
+          filteredArqueroTable = dataTable.filter(d => d.MeasureID == 1199 ); // currently filters hardcoded !!!
+          document.getElementById('showTable').innerHTML = filteredArqueroTable.toHTML(); // print dataTable to HTML
+          */
+
+          document.getElementById('showTable').innerHTML = dataTable.toHTML(); // print dataTable to HTML
+          document.querySelector('#showTable table').id = "tableID" // this gives the table an ID (table code gen'd by Arquero)
+          printSummaryTable();
+        });
+      }
+
+      function printSummaryTable() {
+        $('#tableID').DataTable({
+          "scrollY":        "500px",
+          "scrollCollapse": true,
+          "paging":         false,
+          // orderFixed: [2, 'dsc'],
+          rowGroup: {
+            dataSrc: 2 // groups rows based on value of column index position 2 
+            },
+          "columnDefs": [
+              {
+                  "targets": [0,1,2,5], // this hides columns by index position.
+                  "visible": false,
+              }
+          ]
+        }) 
+    
+      }
+
+      function printMeasures() {
+        var ddl = document.getElementById('measureList');
+        ddl.innerHTML = ''; // clear list from last time!
+        for (var i = 0; i < selectedIndicator[0].Measures.length; i++) {
+          var option = document.createElement("OPTION");
+          option.innerHTML = selectedIndicator[0].Measures[i].MeasurementType;
+          option.value = selectedIndicator[0].Measures[i].MeasureID;
+          ddl.options.add(option);
+        };
+        if (option.value == defaultMeasure) {
+        option.selected = true;
+      }
+        document.getElementById('measureContainer').style.display = "block"
+      }
 
       function printYears() {
-          var ddl = document.getElementById('timeList');
-          ddl.innerHTML = ''; // clear list from last time!
-          for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableTimes.length; i++) {
-            var option = document.createElement("OPTION");
-            option.innerHTML = selectedIndicator[0].Measures[0].AvailableTimes[i].TimeDescription;
-            option.value = selectedIndicator[0].Measures[0].AvailableTimes[i].TimeDescription;
-              if (option.value == 2019) {
-                option.selected = true;
-              } // this would need to be replaced with a "get max value" calculation
-            ddl.options.add(option);
-            };
-          document.getElementById('timeContainer').style.display = "block"
-      }
+        var ddl = document.getElementById('timeList');
+        ddl.innerHTML = ''; // clear list from last time!
+        console.log('selected measure is ')
+        console.table(selectedMeasure)
+        
 
+        for (var i = 0; i < selectedMeasure[0].AvailableTimes.length; i++) {
+          var option = document.createElement("OPTION");
+          option.innerHTML = selectedMeasure[0].AvailableTimes[i].TimeDescription;
+          option.value = selectedMeasure[0].AvailableTimes[i].TimeDescription;
+          // calculate max value and option.selected = true;
+          ddl.options.add(option);
+        };
+        document.getElementById('timeContainer').style.display = "block"
+      }
 
 
       function printGeographies() {
         var ddl = document.getElementById('geoList');
         ddl.innerHTML = ''; // clear list from last time!
-        for (var i = 0; i < selectedIndicator[0].Measures[0].AvailableGeographyTypes.length; i++) {
+        for (var i = 0; i < selectedMeasure[0].AvailableGeographyTypes.length; i++) {
           var option = document.createElement("OPTION");
-          option.innerHTML = selectedIndicator[0].Measures[0].AvailableGeographyTypes[i].GeoType;
-          option.value = selectedIndicator[0].Measures[0].AvailableGeographyTypes[i].GeoType;
+          option.innerHTML = selectedMeasure[0].AvailableGeographyTypes[i].GeoType;
+          option.value = selectedMeasure[0].AvailableGeographyTypes[i].GeoType;
           ddl.options.add(option);
-          };
-          document.getElementById('geoContainer').style.display = "block"
+        };
+        document.getElementById('geoContainer').style.display = "block"
       }
 
 
@@ -201,4 +275,5 @@
 
 
 </body>
+
 </html>
