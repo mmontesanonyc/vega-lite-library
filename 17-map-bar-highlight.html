@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!-- these three added for utd versions--> 
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Map and bar: vconcat/layer/color</h1>
+
+    <p>Does what it says on the tin, mate. Vertically concatenates a map and bar and encodes them alike. This is a pretty intensive manual spec but can be a starting point for converting to Vega and adding a mutual hover effect.</p>
+
+    <div id="vis1" class="chartdest"></div>
+    
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+
+
+<script type="text/javascript">
+
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "This is my good schema!",
+  "width": "700",
+  "height": "750",
+  "data": {
+    "url": "https://gist.githubusercontent.com/mmontesanonyc/28953366ac41a0ecf24470a3cefb6cea/raw/4b2869cc9fe93a4ae4e33b2acc0aad5570c498a0/2380-reduced.csv"
+  },
+  "params": [
+    {"name": "highlight", "select": {"type": "point", "on": "mouseover"}}
+  ],
+  "projection": {"type": "mercator"},
+  "vconcat": [
+    {
+      
+      "mark": {"type": "geoshape", "stroke": "#000000"},
+      "encoding": {
+        "shape": {"field": "geo", "type": "geojson"},
+        "color": {
+          "bin": false,
+          "field": "Value",
+          "type": "quantitative",
+          "scale": {"scheme": {"name": "purples", "extent": [0.25, 1]}}
+        },
+        "strokeWidth": {
+          "condition": [{"param": "highlight", "empty": false, "value": 2}],
+          "value": 0.5
+        }
+      },
+      "transform": [
+        {
+          "lookup": "Geography-ID",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/nycehs/NYC_geography/master/UHF42.topo.json",
+              "format": {"type": "topojson", "feature": "collection"}
+            },
+            "key": "properties.GEOCODE"
+          },
+          "as": "geo"
+        }
+      ]
+    },
+    {
+      "height": "150",
+      "width": "container",
+      "mark": {"type": "bar", "tooltip": true, "stroke": "#000000"},
+      "encoding": {
+        "y": {"field": "Value", "type": "quantitative", "title": null},
+        "tooltip": [
+          {"field": "Geography-ID", "title": "GeoID"},
+          {"field": "Value", "type": "quantitative", "title": "Value"},
+          {"field": "MeasureID", "title": "Measure"}
+        ],
+        "x": {"field": "Geography-ID", "sort": true, "axis": null},
+        "color": {
+          "bin": false,
+          "field": "Value",
+          "type": "quantitative",
+          "scale": {"scheme": {"name": "purples", "extent": [0.25, 1]}}
+        },
+        "strokeWidth": {
+          "condition": [{"param": "highlight", "empty": false, "value": 2}],
+          "value": 0.5
+        }
+      }
+    }
+  ]
+}
+
+vegaEmbed("#vis1", spec);
+
+
+
+</script>
+</body>
+</html>
