@@ -50,8 +50,7 @@
 var spec = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "This is my good schema!",
-  "width": "700",
-  "height": "750",
+  "width": 700,
   "data": {
     "url": "https://gist.githubusercontent.com/mmontesanonyc/28953366ac41a0ecf24470a3cefb6cea/raw/4b2869cc9fe93a4ae4e33b2acc0aad5570c498a0/2380-reduced.csv"
   },
@@ -61,7 +60,8 @@ var spec = {
   "projection": {"type": "mercator"},
   "vconcat": [
     {
-      
+      "height": 450,
+      "width": "container",
       "mark": {"type": "geoshape", "stroke": "#000000"},
       "encoding": {
         "shape": {"field": "geo", "type": "geojson"},
@@ -91,7 +91,7 @@ var spec = {
       ]
     },
     {
-      "height": "150",
+      "height": 150,
       "width": "container",
       "mark": {"type": "bar", "tooltip": true, "stroke": "#000000"},
       "encoding": {
