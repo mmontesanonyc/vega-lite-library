@@ -25,6 +25,7 @@ This repo is a small personal library of useful visualization approaches with Ve
 - Map stuff:
     - [Map and bar](https://mmontesanonyc.github.io/vega-lite-library/15-map-and-bar.html), companion and colors.
     - [Map with basic hover-highlight](https://mmontesanonyc.github.io/vega-lite-library/16-map-highlight.html).
+    - [Map and bar with mutual hover-highlighting](https://mmontesanonyc.github.io/vega-lite-library/17-map-bar-highlight.html)
 - [Converting VL spec to Vega spec](https://mmontesanonyc.github.io/vega-lite-library/14-VL-to-Vega.html) should give us a platform to develop simpler Vega-Lite spec, convert, and add some functions unique to Vega.
  
 ## Techniques

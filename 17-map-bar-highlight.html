@@ -25,9 +25,15 @@
 
   <div id="container">
 
-    <h1>Map and bar: vconcat/layer/color</h1>
+    <h1>Map and bar: mutual highlighting!</h1>
 
-    <p>Does what it says on the tin, mate. Vertically concatenates a map and bar and encodes them alike. This is a pretty intensive manual spec but can be a starting point for converting to Vega and adding a mutual hover effect.</p>
+    <p>Lessons learned:
+      <ul>
+        <li>You can use params to create display conditions for styles like strokeWidth, fillOpacity, etc</li>
+        <li>You <em>can</em> access these params across different concatenated views</li>
+        <li>To do so, the views need to use the same default data source - the top level data source. That means that the map's topo.json must be joined (using transform) to the data source, not the other way around</li>
+      </ul>
+    </p>
 
     <div id="vis1" class="chartdest"></div>
     
