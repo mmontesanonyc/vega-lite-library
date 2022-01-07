@@ -52,7 +52,13 @@ var spec = {
   "title": "This is my good schema!",
   "width": 700,
   "data": {
-    "url": "https://gist.githubusercontent.com/mmontesanonyc/28953366ac41a0ecf24470a3cefb6cea/raw/4b2869cc9fe93a4ae4e33b2acc0aad5570c498a0/2380-reduced.csv"
+    "url": "https://gist.githubusercontent.com/mmontesanonyc/28953366ac41a0ecf24470a3cefb6cea/raw/4b2869cc9fe93a4ae4e33b2acc0aad5570c498a0/2380-reduced.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Value": "number"
+      }
+    }
   },
   "params": [
     {"name": "highlight", "select": {"type": "point", "on": "mouseover"}}
@@ -101,7 +107,7 @@ var spec = {
           {"field": "Value", "type": "quantitative", "title": "Value"},
           {"field": "MeasureID", "title": "Measure"}
         ],
-        "x": {"field": "Geography-ID", "sort": true, "axis": null},
+        "x": {"field": "Geography-ID", "sort": "y", "axis": null},
         "color": {
           "bin": false,
           "field": "Value",
