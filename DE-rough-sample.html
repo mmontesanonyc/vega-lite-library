@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <style>
+    .visbutton {
+      display: inline-block;
+      width: 125px;
+      border: 1px solid lightgray;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .visbutton:hover {
+    background-color: lightgray
+  }
+
+    .vba {
+      background-color: lightgray
+    }
+
+    .datadisp {
+      display:none;
+    }
+
+    .show {
+    display:block;
+  }
+  </style>
+
+
+
+  <div id="container">
+    <h1>Data Explorer Simple Sample</h1>
+    <hr>
+    <h2>Indicator name</h2>
+    <p>This is the indicator description, which is a simple one or two sentence description of the indicator.</p>
+
+    <a onclick="showVis(1)"><div id="1" class="visbutton vba">Summary</div></a>
+    <a onclick="showVis(2)"><div id="2" class="visbutton">Map</div></a>
+    <a onclick="showVis(3)"><div id="3" class="visbutton">Trend</div></a>
+    <a onclick="showVis(4)"><div id="4" class="visbutton">Links</div></a>
+
+
+    <div id="showsum" class="datadisp">
+      Summary
+    </div>
+
+    <div id="showmap" class="datadisp">
+      Map
+    </div>
+
+    <div id="showtrend" class="datadisp">
+      Trend
+    </div>
+
+    <div id="showlinks" class="datadisp">
+      Links
+    </div>
+
+  </div>
+
+
+
+<script type="text/javascript">
+    function showVis(x) {
+      document.getElementById('showsum').classList.remove('show')
+      document.getElementById('showmap').classList.remove('show')
+      document.getElementById('showtrend').classList.remove('show')
+      document.getElementById('showlinks').classList.remove('show')
+
+      document.getElementById('1').classList.remove('vba')
+      document.getElementById('2').classList.remove('vba')
+      document.getElementById('3').classList.remove('vba')
+      document.getElementById('4').classList.remove('vba')
+
+
+      if (x==1) {
+        document.getElementById('showsum').classList.add('show')
+        // run summary draw
+      } else if (x==2) {
+        document.getElementById('showmap').classList.add('show')
+        // run map draw
+      } else if (x==3) {
+        document.getElementById('showtrend').classList.add('show')
+        // run trend draw
+      } else if (x==4) {
+        document.getElementById('showlinks').classList.add('show')
+        // run scatterplot draw
+      }
+      document.getElementById(x).classList.add('vba')
+    }
+
+    function drawTable() {
+    }
+
+
+</script>
+</body>
+</html>
