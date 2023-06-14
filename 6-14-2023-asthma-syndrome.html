@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+        <!-- these three added for utd versions--> 
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <style>
+      .active {
+      font-weight: bold;
+    }
+    </style>
+
+    <h1>Asthma syndrome explorer</h1>
+
+    <button class="active" onclick="smoothed(`Count`)" id="countBtn">Daily</button> <button class="" id="raBtn" onclick="smoothed(`rollingAverage`)">Smoothed (7-day average)</button> 
+    <br>
+    
+    <button class="active" onclick="time(`dayofyear`)" id="dayBtn">Daily</button> 
+    <button class="" onclick="time(`month`)" id="monthBtn">Monthly</button> 
+    
+    <br> 
+    <button class="" onclick="toggle(1)" id="toggle">Hide previous years</button>
+
+
+
+    <div id="vis1" class="chartdest" style="width:100%;"></div>
+    
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+
+
+<script type="text/javascript">
+
+
+const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 400,
+  "description": "Google's stock price over time.",
+  "data": {
+    "url": "https://gist.githubusercontent.com/mmontesanonyc/cc5c74d6c0c208daa867f3bcd3914a8c/raw/3e1ff605ad5aa7420ed8aedcbc198c5b394057a6/asthma-counts-working.csv"
+  },
+"transform":[
+    {"calculate": "year(datum.Date)", "as": "year"},
+    {"window": [{"field": "Count", "op": "mean", "as": "rollingAverage"}], "frame": [0, 6]},
+    {"filter": "datum.Date > 1451624399000"}
+],
+  "mark": {"type": "line", "tooltip": true, "interpolate": "monotone"},
+  "encoding": {
+    "x": {
+      "timeUnit": "dayofyear",
+      "field": "Date",
+      "type":"temporal",
+      "title": null,
+      "axis": {"labelExpr": "[timeFormat(datum.value, '%b'), timeFormat(datum.value, '%m') == '01' ? '' : '']"}
+      },
+    "y": {"aggregate": "sum", "field": "Count","type":"quantitative","title": "ED Visits"},
+    "color": {
+      "field": "year",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+        "range":["grey","grey","grey","grey","grey","grey","grey","blue"]
+      }
+    },
+    "opacity": {
+        "condition": {
+              "test": "datum.year === 2023",
+              "value": 1
+            },
+          "value": 0.3
+        }
+  }
+}
+
+var changeSpec = spec
+
+
+
+vegaEmbed("#vis1", spec);
+
+function smoothed(x) {
+  changeSpec = spec
+  changeSpec.encoding.y.field = x
+  vegaEmbed("#vis1", changeSpec);
+
+  if (x == 'Count') {
+    document.getElementById('countBtn').classList.add('active')
+    document.getElementById('raBtn').classList.remove('active')
+  } else {
+    document.getElementById('countBtn').classList.remove('active')
+    document.getElementById('raBtn').classList.add('active')
+  }
+}
+
+function time(y) {
+  changeSpec = spec;
+  changeSpec.encoding.x.timeUnit = y
+  vegaEmbed("#vis1", changeSpec);
+
+  if (y == 'dayofyear') {
+    document.getElementById('dayBtn').classList.add('active')
+    document.getElementById('monthBtn').classList.remove('active')
+  } else {
+    document.getElementById('dayBtn').classList.remove('active')
+    document.getElementById('monthBtn').classList.add('active')
+  }
+}
+
+var count = 0
+
+// 1451624400000
+
+// 1672549200000
+
+function toggle(x) {
+  count = count + x
+  if (count % 2 == 0) {
+    changeSpec.transform[2].filter = `datum.Date > 1451624400000`;
+    document.getElementById('toggle').innerHTML = 'Hide previous years'
+
+  } else {
+    document.getElementById('toggle').innerHTML = 'Show previous years'
+    changeSpec.transform[2].filter = `datum.Date > 1672549200000`
+  };
+  console.log(changeSpec)
+  vegaEmbed("#vis1", changeSpec);
+}
+
+
+</script>
+</body>
+</html>
