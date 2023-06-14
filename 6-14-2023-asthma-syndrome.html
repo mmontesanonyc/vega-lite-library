@@ -76,7 +76,7 @@ const spec = {
       "field": "Date",
       "type":"temporal",
       "title": null,
-      "axis": {"labelExpr": "[timeFormat(datum.value, '%b'), timeFormat(datum.value, '%m') == '01' ? '' : '']"}
+      "axis": {"labelExpr": "[timeFormat(datum.value, '%-b %-d')]"}
       },
     "y": {"aggregate": "sum", "field": "Count","type":"quantitative","title": "ED Visits"},
     "color": {
