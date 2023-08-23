@@ -1,11 +1,15 @@
 # Vega-Lite Library
-This repo is a small personal library of useful visualization approaches with Vega-Lite. This repo uses:
+This repo is a small personal library of useful visualization approaches with Vega-Lite. Basically, I needed to keep things in one place as I learned, experimented, and wound up settling or finding useful techniques. This is the place. 
+
+This repo uses:
 - [Vega-Lite](https://vega.github.io/vega-lite/) for visualizations
 - d3: specifically ```d3.csv``` to ingest data
 - [Arquero](https://uwdata.github.io/arquero/) to ingest and manipulate data
 - Various publicly-available data on Github, much of it from the [NYC DOHMH coronavirus-data repository](https://github.com/nychealth/coronavirus-data)
 
 ## Pages
+This will probably get out of date pretty soon, but: 
+
 - [Basic bar](https://mmontesanonyc.github.io/vega-lite-library/1-basic-bar-from-named.html): from named data source: storing data outside the spec, inserting it with Vega View.
 - [Sorted bar](https://mmontesanonyc.github.io/vega-lite-library/2-sorted-bar.html): d3.csv, named data source, and a sorted bar chart.
 - [Line chart](https://mmontesanonyc.github.io/vega-lite-library/3-line-from-named.html): d3.csv, named source, remote spec.
