@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.0"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+    
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+            <!--CSS-->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Clickable UHF map, simpler spec</h1>
+    <p>Adding an event listener to <code>vegaEmbed</code> taken from <a href="https://stackoverflow.com/questions/57707494/whats-the-proper-way-to-implement-a-custom-click-handler-in-vega-lite">here</a>.</p>
+
+
+    <div id="vis1" class="chartdest"></div>
+
+    <strong>GEOCODE:</strong> <span id="output"></span><br>
+    <strong>Neighborhood name:</strong> <span id="output2"></span>
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+<style>
+  .marks:hover {
+    cursor: pointer
+  }
+</style>
+
+
+
+<script type="text/javascript">
+
+var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 500,
+  "autosize": {"type": "fit", "contains": "padding"},
+  "config": {
+    "view": {"stroke": "transparent"}
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/nychealth/EHDP-data/production/geography/UHF42.topo.json",
+        "format": {"type": "topojson", "feature": "collection"}
+      },
+      "mark": {"type": "geoshape", "stroke": "#ffffff", "fill": "lightgray"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/nychealth/EHDP-data/production/geography/UHF42.topo.json",
+        "format": {"type": "topojson", "feature": "collection"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.GEOCODE",
+          "from": {
+            "data": {
+              "url": "UHF42.csv"
+              },
+            "key": "GEOCODE",
+            "fields": ["GEOCODE", "GEONAME", "VALUE"]
+          },
+          "default": "no data"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "#ffffff"},
+      "params": [
+        {
+          "name": "highlight",
+          "select": {
+            "type": "point",
+            "on": "mouseover",
+            "clear": "mouseout"
+          }
+        }
+      ],
+      "encoding": {
+        "color": {
+          "bin": false,
+          "field": "VALUE",
+          "type": "quantitative",
+          "legend": null,
+          "scale": {"scheme": {"name": "blues", "extent": [0.25, 0.75]}}
+        },
+        "stroke": {
+          "condition": [
+            {"param": "highlight", "empty": false, "value": "cyan"}
+          ],
+          "value": "#dadada"
+        },
+        "strokeWidth": {"condition": [
+          {
+            "param": "highlight", "empty": false, "value": 2.5
+          }
+        ], "value": 0.5},
+        "tooltip": [
+          {"field": "GEONAME", "type": "nominal", "title": "Neighborhood"}        ]
+      }
+    }
+  ]
+}
+
+vegaEmbed('#vis1', spec, {"actions": false}).then(result => {
+    result.view.addEventListener('click', function(event, item) {
+       console.log('CLICK', event, item);
+       console.log(item.datum)
+       console.log(item.datum.GEOCODE)
+       document.getElementById('output').innerHTML = item.datum.GEOCODE 
+       document.getElementById('output2').innerHTML = item.datum.GEONAME 
+
+    });
+}).catch(console.warn);
+
+
+</script>
+</body>
+</html>
