@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Vega-lite dependencies-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.8.7/polyfill.js"></script>
+    <script src="https://vega.github.io/vega/assets/promise.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/symbol.min.js"></script>
+    <script src="https://vega.github.io/vega/assets/fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5/build-es5/vega.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4/build-es5/vega-lite.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build-es5/vega-embed.js"></script>
+
+    <!--D3-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- little bit of CSS -->
+    <style>
+      body {
+        max-width: 700px;
+        margin: auto;
+      }
+    
+      #container {
+        max-width: 700px;
+      }
+    
+      .chartdest {
+        width: 100%;
+        height: 250px;
+        margin-bottom: 50px;
+      }
+    
+      code {
+        color: white;
+        background-color: rgb(73, 73, 73);
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+    </style>
+</head>
+<body>
+
+
+
+  <div id="container">
+
+    <h1>Simple line example</h1>
+    
+    <p>In the JS on this page, we have a JSON spec and a line of code that uses <code>vegaEmded()</code> to draw this spec into a div called <code>#vis2</code>.</p>      
+
+    <div id="vis2" class="chartdest"></div>
+    
+
+    
+    
+    <hr><a href="index.html">Back to main</a>
+  </div>
+
+
+
+<script type="text/javascript">
+
+var specJSON = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Test rate over time",
+    "width": "container",
+    "height": 250,
+    "config": {
+        "background": "#FFFFFF",
+        "axisX": {
+            "grid": false,
+            "ticks": true,
+            "labels": true
+        },
+        "axisY": {
+            "domain": false,
+            "ticks": false,
+            "gridDash": [
+                2
+            ],
+            "gridWidth": 1
+        },
+        "view": {
+            "stroke": "transparent"
+        }
+    },
+    "data": {
+      "url": "https://gist.githubusercontent.com/mmontesanonyc/2fdc46bcac05e56cac382524717e4d35/raw/2a9415cc64fb5e2ed3b1b8f513c4677c15619912/sevenday_caserates.csv"
+        },
+    "layer": [
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 2.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal",
+                    "title": " "
+                },
+                "y": {
+                    "field": "CITY",
+                    "type": "quantitative",
+                    "title": " "
+                },
+                "color": {
+                    "value": "black"
+                },
+                "tooltip": [
+                    {
+                        "field": "CITY",
+                        "title": "New York City"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 1.5
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "BX",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "darkgrey"
+                },
+                "tooltip": [
+                    {
+                        "field": "BX",
+                        "title": "The Bronx"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "point": true,
+                "tooltip": true,
+                "interpolate": "natural",
+                "strokeWidth": 3
+            },
+            "encoding": {
+                "x": {
+                    "field": "week_end_date",
+                    "type": "temporal"
+                },
+                "y": {
+                    "field": "UHF101",
+                    "type": "quantitative"
+                },
+                "color": {
+                    "value": "hotpink"
+                },
+                "tooltip": [
+                    {
+                        "field": "UHF101",
+                        "title": "UHF 101"
+                    },
+                    {
+                        "field": "week_end_date",
+                        "type": "temporal",
+                        "title": "Week ending"
+                    }
+                ]
+            }
+        }
+    ]
+}
+
+
+
+vegaEmbed("#vis2",specJSON)
+
+
+</script>
+</body>
+</html>
