@@ -121,8 +121,9 @@ var spec = {
 }
 
 vegaEmbed('#vis1', spec, {"actions": false}).then(result => {
-    result.view.addEventListener('click', function(event, item) {
-       console.log('CLICK', event, item);
+    result.view.addEventListener('mouseover', function(event, item) {
+      // can also be "click" of course
+       console.log('mouseover', event, item);
        console.log(item.datum)
        console.log(item.datum.GEOCODE)
        document.getElementById('output').innerHTML = item.datum.GEOCODE 
