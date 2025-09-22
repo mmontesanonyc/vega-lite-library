@@ -25,13 +25,22 @@
 
   #chartDest {
     width: 100%;
-    height: 600px;
+    height: 400px;
+  }
+
+    #chartDest2 {
+    width: 100%;
+    height: 400px;
+  }
+
+  .fs-sm {
+    font-size: 14px;
   }
   </style>
 
 
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-sm-12 mx-auto">
         <h1>Raising the minimum wage would save lives</h1>
@@ -39,7 +48,7 @@
 
 
         <div class="row">
-          <div class="col-3 border">
+          <div class="col-4">
             <p>Minimum wage:</p>
                 <button class="wagecontrol btn btn-sm btn-outline-primary active" data-value="b30">$30</button>
                 <button class="wagecontrol btn btn-sm btn-outline-primary" data-value="a20">$20</button>         
@@ -50,14 +59,14 @@
                 <button class="scenariocontrol btn btn-sm btn-outline-secondary active" data-value="scen1">1</button>
                 <button class="scenariocontrol btn btn-sm btn-outline-secondary" data-value="scen2">2</button>
                 <button class="scenariocontrol btn btn-sm btn-outline-secondary" data-value="scen3">3</button>
-            
-            <div id="scen1">
+            <br><br>
+            <div id="scen1" class="fs-sm">
             <p><strong>Scenario 1:</strong> the higher minimum wage raises wages of people who previously earned less than the new minimum wage, but does not affect employment.</p>
             </div>
-            <div id="scen2">
+            <div id="scen2" class="fs-sm">
             <p><strong>Scenario 2:</strong> a higher minimum wage creates "spillover effects:" people earning near the new minimum wage also see wage increases.</p>
             </div>
-            <div id="scen3">
+            <div id="scen3" class="fs-sm">
 
             <p><strong>Scenario 3:</strong> a higher minimum wage has no spillover effects, and also results in a 15% loss of minimum wage jobs.</p>
             </div>
@@ -72,11 +81,46 @@
 
           </div>
 
-          <div class="col-9 border" id="holder">
+          <div class="col-4">
             <div id="chartDest">
               Chart goes here
             </div>
 
+          </div>
+
+            <div class="col-4">
+            <div id="chartDest2">
+              Chart goes here
+            </div>
+
+          </div>
+
+          <div class="col-12">
+            <div id="b30" class="mwage">
+              A <strong>$30 minimum wage</strong> could:
+                <ul>
+                  <li>Reduce citywide poverty from 33.5% to somewhere between 27.7 and 31.2%.</li>
+                  <li>Reduce the premature mortality rate (deaths before age 65, per 100,000 people) from 215.7 to between 195.4 and 207.6. This could <strong>prevent as many as 1,400 premature deaths</strong>.</li>
+                </ul>
+              <strong>These impacts would be much larger in neighborhoods with higher poverty.</strong>      
+            </div>
+
+            <div id="a20" class="mwage" style="display:none;">
+              A <strong>$20 minimum wage</strong> could:
+              <ul>
+                <li>Reduce citywide poverty from 33.5% to somewhere between 32.2 and 33.6%.</li>
+                <li>Reduce the premature mortality rate (deaths before age 65, per 100,000 people) from 215.7 to between 211 and 216. This represents as much as 2.6% of all premature deaths in NYC (in 2023).</li>
+              </ul>
+               In 2023, there were about 11,000 premature deaths in NYC.   
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="row" style="margin-top: 50px;">
+          <div class="col-12">
+            <div style="min-height:378px" id="datawrapper-vis-9QaVu"><script type="text/javascript" defer src="https://datawrapper.dwcdn.net/9QaVu/embed.js" charset="utf-8" data-target="#datawrapper-vis-9QaVu"></script><noscript><img src="https://datawrapper.dwcdn.net/9QaVu/full.png" alt="Table 1 (Table)" /></noscript></div>
           </div>
         </div>
       </div>
@@ -95,17 +139,12 @@ function redrawChart(settings) {
 
 function drawChart(w,s) {
 
-  const width = document.getElementById("holder").offsetWidth;
+  const newWage = w.includes('20') ? 'with $20 min wage' : w.includes('30') ? 'with $30 min wage' : 'Not sure'
 
-  const halfWidth = .5 * width
+  var height = 300
 
-    console.log(width)
-
-  console.log(halfWidth)
-
-  var spec = {
+  var povertySpec = {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Comparison of Poverty vs PrematureMort",
   "data": {
     "url": "https://gist.githubusercontent.com/mmontesanonyc/5a368f127bf226c42ec72c56e48fb955/raw/4d048c9798cff78c4d5b640a1315e606ad8028f9/minimumwage.csv"
   },
@@ -132,24 +171,33 @@ function drawChart(w,s) {
   "transform": [
     {"filter": `datum.MinWage==='${w}'`},
     // {"filter": "datum.Neighborhood!='NYC'"},
-    {"filter": `datum.Scenario==='${s}'`}
-  ],
-  "hconcat": [
+    {"filter": `datum.Scenario==='${s}'`},
+    {"filter": "datum.Variable==='Poverty'"},
+    {"calculate": "datum.Value/100", "as": "Value"},
     {
-      "title": "Poverty",
-      "width": 150,
-      "height": 400,
-      "transform": [
-        {"filter": "datum.Variable==='Poverty'"},
-        {"calculate": "datum.Value/100", "as": "Value"}
-      ],
-      "mark": {"type": "line", "point": true},
+      "calculate": "datum.Neighborhood == 'veryhigh' ? 'Very high (50%+)' : datum.Neighborhood == 'high' ? 'High (35 to 49%)' : datum.Neighborhood == 'moderate' ? 'Moderate (20 to 34%)' : datum.Neighborhood == 'low' ? 'Low (Under 20%)' : 'All NYC: 29.2%'",
+      "as": "PovLabel"
+    },
+  ],
+        "title": "Poverty",
+      "height": height,
+      "width": "container",
+      "mark": {
+        "type": "line", 
+        "point": {
+          "filled": true,
+          "size": 60
+        }
+      },
       "encoding": {
         "x": {
           "field": "Time",
           "type": "ordinal",
           "sort": ["before", "after"],
-          "title": null
+          "title": null,
+          "axis": {
+                  "labelExpr": `datum.value == 'Before' ? 'Current' : '${newWage}'`
+                }
         },
         "y": {
           "field": "Value",
@@ -157,6 +205,110 @@ function drawChart(w,s) {
           "title": null,
           "axis": {"format": ".0%"},
           "scale": {"domain": [0.1, 0.6]}
+        },
+        "color": {
+            "condition": {
+              "test": "datum.Neighborhood === 'NYC'",
+              "value": "black"
+            },
+          "field": "Neighborhood",
+          "type": "nominal",
+          "title": "Neighborhood",
+          "legend": null,
+          "scale": {
+                      "domain": ["low", "moderate", "high", "veryhigh"],
+                      "range": ["#9ecae1", "#6baed6", "#8856a7", "#d01c8b"]
+                    }
+        },
+        "strokeWidth": 3,
+          "strokeDash": {
+            "condition": [
+              {
+                "test": "datum.Neighborhood == 'NYC'",
+                "value": [4,3]     // dashed pattern: 6px line, 3px gap
+              }
+            ]
+          },
+        "tooltip": [
+
+          {"field": "PovLabel", "type": "ordinal", "title": "Neighborhood poverty"},
+          {
+            "field": "Value",
+            "type": "quantitative",
+            "title": "Poverty",
+            "format": ".0%"
+          },
+                    {
+            "field": "Time",
+            "title": "Time"
+          },
+        ]
+      }
+}
+
+var prematureMortSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": {
+    "url": "https://gist.githubusercontent.com/mmontesanonyc/5a368f127bf226c42ec72c56e48fb955/raw/4d048c9798cff78c4d5b640a1315e606ad8028f9/minimumwage.csv"
+  },
+  "config": {
+    "background": "#FFFFFF",
+    "axisX": {
+      "labelAngle": 0,
+      "labelOverlap": "parity",
+      "labelFontSize": 11,
+      "titleFontSize": 13,
+      "titleFont": "sans-serif",
+      "titlePadding": 10,
+      "domain": false,
+      "ticks": false
+    },
+    "view": {"stroke": "transparent"},
+    "axisY": {
+      "domain": true,
+      "domainColor": "lightgray",
+      "ticks": true,
+      "tickCount": 5
+    }
+  },
+  "transform": [
+    {"filter": `datum.MinWage==='${w}'`},
+    // {"filter": "datum.Neighborhood!='NYC'"},
+    {"filter": `datum.Scenario==='${s}'`},
+    {"filter": "datum.Variable==='PrematureMort'"},
+    {
+      "calculate": "datum.Neighborhood == 'veryhigh' ? 'Very high (50%+)' : datum.Neighborhood == 'high' ? 'High (35 to 49%)' : datum.Neighborhood == 'moderate' ? 'Moderate (20 to 34%)' : datum.Neighborhood == 'low' ? 'Low (Under 20%)' : 'All NYC: 29.2%'",
+      "as": "PovLabel"
+    },
+    {
+      "calculate": "datum.Value + ' per 100,000 people'",
+      "as": "ValueLabel"
+    }
+  ],
+      "title": "Premature Mortality",
+      "height": height,
+      "width": "container",
+      "mark": {
+        "type": "line", 
+        "point": {
+          "filled": true,
+          "size": 60
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "Time",
+          "type": "ordinal",
+          "sort": ["before", "after"],
+          "title": null,
+          "axis": {
+                  "labelExpr": `datum.value == 'Before' ? 'Current' : '${newWage}'`
+                }
+        },
+        "y": {
+          "field": "Value",
+          "type": "quantitative",
+          "title": null
         },
           "color": {
             "condition": {
@@ -166,75 +318,40 @@ function drawChart(w,s) {
           "field": "Neighborhood",
           "type": "nominal",
           "title": "Neighborhood",
-                    "legend": null
+          "legend": null,
+          "scale": {
+                      "domain": ["low", "moderate", "high", "veryhigh"],
+                      "range": ["#9ecae1", "#6baed6", "#8856a7", "#d01c8b"]
+                    }
         },
+                "strokeWidth": 3,
+          "strokeDash": {
+            "condition": [
+              {
+                "test": "datum.Neighborhood == 'NYC'",
+                "value": [4,3]     // dashed pattern: 6px line, 3px gap
+              }
+            ]
+          },
         "tooltip": [
 
-          {"field": "Neighborhood", "type": "ordinal", "title": "Neighborhood poverty"},
+          {"field": "PovLabel", "type": "ordinal", "title": "Neighborhood poverty"},
+          {"field": "ValueLabel", "type": "nominal", "title": "Premature mortality"},
           {
             "field": "Time",
             "title": "Time"
-          },
-          {
-            "field": "Value",
-            "type": "quantitative",
-            "title": "Poverty",
-            "format": ".0%"
           }
         ]
       }
-    },
-    {
-      "title": "Premature mortality rate",
-      "width": 150,
-      "height": 400,
-      "transform": [{"filter": "datum.Variable==='PrematureMort'"}],
-      "mark": {"type": "line", "point": true},
-      "encoding": {
-        "x": {
-          "field": "Time",
-          "type": "ordinal",
-          "sort": ["before", "after"],
-          "title": null
-        },
-        "y": {
-          "field": "Value",
-          "type": "quantitative",
-          "title": null,
-          "scale": {"domain": [100, 400]},
-            "axis": {
-    "orient": "right"   // <-- moves axis to the right side
-  }
-        },
-                "color": {
-                              "condition": {
-              "test": "datum.Neighborhood === 'NYC'",
-              "value": "black"
-            },
-          "field": "Neighborhood",
-          "type": "nominal",
-          "title": "Neighborhood",
-          "legend": null
-        },
-        "tooltip": [
-
-          {"field": "Neighborhood", "type": "ordinal", "title": "Neighborhood poverty"},
-          {
-            "field": "Time",
-            "title": "Time"
-          },
-          {
-            "field": "Value",
-            "type": "quantitative",
-            "title": "Premature mortality, per 100k",
-          }
-        ]
-      }
-    }
-  ]
 }
 
-    vegaEmbed("#chartDest", spec, { actions: true })
+
+    vegaEmbed("#chartDest", povertySpec, { actions: false })
+      .then(res => {
+        window.addEventListener("resize", () => res.view.resize());
+      });
+
+          vegaEmbed("#chartDest2", prematureMortSpec, { actions: false })
       .then(res => {
         window.addEventListener("resize", () => res.view.resize());
       });
@@ -258,6 +375,13 @@ function setupButtonGroup(selector, variableName) {
       // update variable
       if (variableName === "wage") {
         wage = btn.dataset.value;
+        // Show corresponding div, hide others
+        const wageDivs = document.querySelectorAll(".mwage");
+        wageDivs.forEach(div => {
+          div.style.display = div.id === wage ? "block" : "none";
+        });
+
+
       } else if (variableName === "scenario") {
         scenario = btn.dataset.value;
 
