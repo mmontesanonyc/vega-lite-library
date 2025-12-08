@@ -108,6 +108,122 @@ function lookup() {
       `Your recipient is: ${assigned}`;
   }
 }
+
+
+// VALIDATOR:
+function validateMapping(names, shuffled, familyUnits) {
+  if (names.length !== shuffled.length) {
+    console.error("Lengths do not match.");
+    return false;
+  }
+
+  const used = new Set();
+
+  for (let i = 0; i < names.length; i++) {
+    const from = names[i];
+    const to = shuffled[i];
+
+    // 1. No self-matching
+    if (from === to) {
+      console.error(`Invalid: ${from} is matched to themself.`);
+      return false;
+    }
+
+    // 2. No duplicate assignments
+    if (used.has(to)) {
+      console.error(`Invalid: ${to} is assigned more than once.`);
+      return false;
+    }
+    used.add(to);
+
+    // 3. Check against family units
+    for (const unit of familyUnits) {
+      const group = unit.names.map(s => s.trim());
+
+      if (group.includes(from) && group.includes(to)) {
+        console.error(`Invalid: ${from} cannot be matched with ${to} (same family unit).`);
+        return false;
+      }
+    }
+  }
+
+  console.log("Mapping is valid!");
+  return true;
+}
+
+
+// GENERATOR
+function generateValidShuffle(names, familyUnits, maxAttempts = 50000) {
+
+  // Create lookup table for quick family exclusion checks
+  const familyMap = {};
+  for (const unit of familyUnits) {
+    const group = unit.names.map(s => s.trim());
+    for (const name of group) {
+      familyMap[name] = new Set(group);
+    }
+  }
+
+  function violatesFamily(from, to) {
+    return familyMap[from] && familyMap[from].has(to);
+  }
+
+  function isValid(shuffled) {
+    const used = new Set();
+
+    for (let i = 0; i < names.length; i++) {
+      const from = names[i];
+      const to = shuffled[i];
+
+      // No self
+      if (from === to) return false;
+
+      // No duplicates
+      if (used.has(to)) return false;
+      used.add(to);
+
+      // No family conflicts
+      if (violatesFamily(from, to)) return false;
+    }
+
+    return true;
+  }
+
+  function randomShuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const shuffled = randomShuffle(names);
+
+    if (isValid(shuffled)) {
+      console.log("Valid shuffle found in", attempt, "attempts.");
+      return shuffled;
+    }
+  }
+
+  console.error("Failed to generate a valid shuffle within attempt limit.");
+  return null;
+}
+
+/*
+USAGE:
+
+const result = generateValidShuffle(names, familyUnits);
+
+if (result) {
+  console.log("Shuffled array:", result);
+  validateMapping(names, result, familyUnits);
+}
+
+*/
+
+
 </script>
 
 
