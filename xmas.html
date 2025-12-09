@@ -45,7 +45,8 @@ const names = [
   "Jacob",
   "Reba",
   "Cab",
-  "Viera"
+  "Viera",
+  "Paul"
 ];
 
 const familyUnits = [
@@ -56,7 +57,7 @@ const familyUnits = [
     "names": ["Sam", "Katherine"]
   },
   {
-    "names": ["Heidi", "Matthew"]
+    "names": ["Heidi", "Matthew","Paul"]
   },
   {
     "names": ["Kristen", "Catherine"]
@@ -73,29 +74,30 @@ const familyUnits = [
 ]
 
 
-/*
 const shuffled = [
-  "Catherine",
-  "Sam",
-  "Jacob",
-  "Katherine",
-  "Lydia",
-  "Madie",
-  "Emily",
-  "John",
-  "Heidi",
-  "Matthew",
-  "Beata",
-  "Marissa",
-  "Helen",
-  "Kristen",
-  "Reba",
-  "Rachael",
-  "Taz",
-  "Annika",
-  "Charlotte"
-];
-*/
+    "Kristen",
+    "Katherine",
+    "Beata",
+    "Viera",
+    "Annika",
+    "Charlotte",
+    "Paul",
+    "Sam",
+    "Marissa",
+    "Jacob",
+    "Reba",
+    "Emily",
+    "Matthew",
+    "Madie",
+    "Helen",
+    "Cab",
+    "Catherine",
+    "John",
+    "Heidi",
+    "Lydia",
+    "Taz",
+    "Rachael"
+]
 
 
 const mapping = {};
@@ -218,18 +220,12 @@ function generateValidShuffle(names, familyUnits, maxAttempts = 50000) {
   return null;
 }
 
-/*
-USAGE:
-
 const result = generateValidShuffle(names, familyUnits);
 
 if (result) {
   console.log("Shuffled array:", result);
   validateMapping(names, result, familyUnits);
 }
-
-*/
-
 
 </script>
 
